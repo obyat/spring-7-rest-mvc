@@ -3,6 +3,7 @@ package guru.springframework.spring7restmvc.service;
 import guru.springframework.spring7restmvc.model.Beer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -88,5 +89,23 @@ public class BeerServiceImpl implements BeerService {
         log.debug("get BeerService by Id in BeerServiceImpl: {}", id.toString());
 
         return this.beerMap.get(id);
+    }
+
+    @Override
+    public Beer saveNewBeer(Beer beer) {
+        Beer savedBeer = Beer.builder()
+                .id(UUID.randomUUID())
+                .beerName(beer.getBeerName())
+                .version(beer.getVersion())
+                .price(beer.getPrice())
+                .quantityOnHand(beer.getQuantityOnHand())
+                .upc(beer.getUpc())
+                .createdDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
+                .build();
+
+        this.beerMap.put(savedBeer.getId(), savedBeer);
+
+        return savedBeer;
     }
 }
