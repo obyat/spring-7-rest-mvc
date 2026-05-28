@@ -2,7 +2,11 @@ package guru.springframework.spring7restmvc.service;
 
 import guru.springframework.spring7restmvc.model.Beer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
@@ -77,6 +81,7 @@ public class BeerServiceImpl implements BeerService {
         beerMap.put(beer3.getId(), beer3);
         beerMap.put(beer4.getId(), beer4);
         beerMap.put(beer5.getId(), beer5);
+//        this.beerService = beerService;
     }
 
     @Override
@@ -107,5 +112,19 @@ public class BeerServiceImpl implements BeerService {
         this.beerMap.put(savedBeer.getId(), savedBeer);
 
         return savedBeer;
+    }
+
+
+    @Override
+    public void updateBeerById(UUID id, Beer beer) {
+        Beer existingBeer = this.beerMap.get(id);
+        existingBeer.setBeerName(beer.getBeerName());
+        existingBeer.setVersion(beer.getVersion());
+        existingBeer.setPrice(beer.getPrice());
+        existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+        existingBeer.setUpc(beer.getUpc());
+        existingBeer.setUpdatedDate(LocalDateTime.now());
+
+        this.beerMap.put(id, existingBeer);
     }
 }
