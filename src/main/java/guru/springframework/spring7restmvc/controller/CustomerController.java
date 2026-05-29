@@ -1,6 +1,7 @@
 package guru.springframework.spring7restmvc.controller;
 
 
+import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -45,4 +46,10 @@ public class CustomerController {
         return customerService.getCustomerById(id);
     }
 
+    @PutMapping("{customerId}")
+    public ResponseEntity<Customer> updateCustomerById(@PathVariable UUID customerId, @RequestBody Customer customer) {
+        log.debug("Updating customer by id in controller: {}", customerId);
+        customerService.updateCustomerById(customerId, customer);
+        return new ResponseEntity<Customer>(HttpStatus.NO_CONTENT);
+    }
 }
