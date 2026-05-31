@@ -3,6 +3,7 @@ package guru.springframework.spring7restmvc.controller;
 import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.service.BeerService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beer")
 public class BeerController {
@@ -35,10 +36,11 @@ public class BeerController {
         return this.beerService.listBeers();
     }
 
+
     @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
     public Beer getBeerById(@PathVariable("beerId") UUID id){
         log.debug("Getting beer by id in BeerController: {}", id);
-
+        log.info("Getting beer by id in BeerController: {}", String.valueOf(id) + String.valueOf(id));
         return beerService.getBeerById(id);
     }
 
