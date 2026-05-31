@@ -81,11 +81,13 @@ public class BeerServiceImpl implements BeerService {
         beerMap.put(beer3.getId(), beer3);
         beerMap.put(beer4.getId(), beer4);
         beerMap.put(beer5.getId(), beer5);
-//        this.beerService = beerService;
     }
 
     @Override
     public List<Beer> listBeers() {
+        this.beerMap.values().stream().findFirst().ifPresent(beer -> {
+            beer.setBeerName("updated Beer");
+        });
         return new ArrayList<>(this.beerMap.values());
     }
 
