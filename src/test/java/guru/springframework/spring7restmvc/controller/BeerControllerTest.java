@@ -6,15 +6,21 @@ import guru.springframework.spring7restmvc.service.BeerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(BeerController.class)
+@ExtendWith(MockitoExtension.class)
 class BeerControllerTest {
 
     @Autowired
@@ -41,6 +48,9 @@ class BeerControllerTest {
 
     BeerServiceImpl beerServiceImpl;
 
+
+    @Captor
+    ArgumentCaptor<UUID> beerUUIDCaptor;
 
     @BeforeEach
     void setUp() {
@@ -114,10 +124,8 @@ class BeerControllerTest {
                 .andExpect(status().isNoContent());
 
 
-        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
-        verify(beerService).deleteBeerById(uuidCaptor.capture());
-
-        assertThat(uuidCaptor.getValue(), is(testBeer.getId()));
+        verify(beerService).deleteBeerById(this.beerUUIDCaptor.capture());
+        assertThat(this.beerUUIDCaptor.getValue(), is(testBeer.getId()));
         assertThat(beerServiceImpl.listBeers().size(), is(4));
     }
 
@@ -145,4 +153,5 @@ class BeerControllerTest {
                 .andExpect(content().contentType(String.valueOf(MediaType.APPLICATION_JSON)))
                 .andExpect(jsonPath("$.length()", is(5)));
     }
+
 }

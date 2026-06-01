@@ -1,7 +1,6 @@
 package guru.springframework.spring7restmvc.controller;
 
 
-import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import lombok.AllArgsConstructor;
