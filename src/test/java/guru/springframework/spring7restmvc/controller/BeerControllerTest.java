@@ -19,8 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -61,6 +60,21 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.beerName", equalTo("New Beer 2.0")))
                 .andExpect(header().string("Location", "/api/v1/beer/" + beer.getId().toString()));
     }
+
+
+    @Test
+    void testUpdateBeer() throws Exception {
+        Beer beer = this.beerServiceImpl.listBeers().getFirst();
+        beer.setBeerName("Updated Beer 2.0");
+        beer.setPrice(new BigDecimal("2.0"));
+
+        this.mockMvc.perform(put("/api/v1/beer/"  + beer.getId().toString())
+                        .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(beer)))
+                .andExpect(status().isNoContent());
+    }
+
 
     @Test
     void getBeerById() throws Exception {

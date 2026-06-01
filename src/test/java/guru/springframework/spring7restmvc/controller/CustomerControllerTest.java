@@ -13,9 +13,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.is;
 
@@ -55,9 +58,21 @@ class CustomerControllerTest {
             .andExpect(jsonPath("$.customerName").value("Ray Jay"))
             .andExpect(jsonPath("$.version").value(2))
             .andExpect(header().string("Location", "/api/v1/customer/" + customer.getId().toString()));
-
     }
 
+
+    @Test
+    void testUpdateCustomer() throws Exception {
+        Customer customer = this.customerServiceImpl.getAllCustomers().getFirst();
+
+        this.mockMvc.perform(put("/api/v1/customer/" +  customer.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(customer)))
+                .andExpect(status().isNoContent());
+
+        verify(customerService).updateCustomerById(any(UUID.class), any(Customer.class));
+    }
 
     @Test
     void testGetCustomerById() throws Exception {
