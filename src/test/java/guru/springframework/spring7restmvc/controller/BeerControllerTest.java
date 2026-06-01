@@ -6,6 +6,7 @@ import guru.springframework.spring7restmvc.service.BeerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -14,10 +15,13 @@ import tools.jackson.databind.ObjectMapper;
 
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -68,7 +72,7 @@ class BeerControllerTest {
         beer.setBeerName("Updated Beer 2.0");
         beer.setPrice(new BigDecimal("2.0"));
 
-        this.mockMvc.perform(put("/api/v1/beer/"  + beer.getId().toString())
+        this.mockMvc.perform(put("/api/v1/beer/" + beer.getId().toString())
                         .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                         .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(beer)))
@@ -89,6 +93,34 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
                 .andExpect(jsonPath("$.beerName", equalTo("updated Beer")));
     }
+
+
+    @Test
+    void testDeleteBeer() throws Exception {
+        Beer testBeer = beerServiceImpl.listBeers().getFirst();
+
+        assertThat(beerServiceImpl.listBeers().size(), is(5));
+
+        // Make the mocked service's deleteById affect the real in-memory impl
+        org.mockito.Mockito.doAnswer(invocation -> {
+            java.util.UUID id = invocation.getArgument(0);
+            beerServiceImpl.deleteBeerById(testBeer.getId());
+            return null;
+        }).when(beerService).deleteBeerById(testBeer.getId());
+
+        mockMvc.perform(delete("/api/v1/beer/" + testBeer.getId())
+                        .accept(String.valueOf(MediaType.APPLICATION_JSON))
+                        .content(String.valueOf(MediaType.APPLICATION_JSON)))
+                .andExpect(status().isNoContent());
+
+
+        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(beerService).deleteBeerById(uuidCaptor.capture());
+
+        assertThat(uuidCaptor.getValue(), is(testBeer.getId()));
+        assertThat(beerServiceImpl.listBeers().size(), is(4));
+    }
+
 
     @Test
     void getBeerByIdLastBeer() throws Exception {

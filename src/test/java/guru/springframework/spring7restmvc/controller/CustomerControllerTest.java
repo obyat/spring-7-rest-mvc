@@ -6,6 +6,8 @@ import guru.springframework.spring7restmvc.service.CustomerService;
 import guru.springframework.spring7restmvc.service.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -86,6 +89,31 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("$.Id", is(customer.getId().toString())))
                 .andExpect(jsonPath("$.customerName", is(customer.getCustomerName())));
     }
+
+
+    @Test
+    void testDeleteCustomerById() throws Exception {
+        Customer customer = customerServiceImpl.getAllCustomers().getFirst();
+        assertThat(customerService.getAllCustomers().size(), is(0));
+
+        Mockito.doAnswer(invocation -> {
+            java.util.UUID customerId = invocation.getArgument(0);
+            customerServiceImpl.deleteCustomerById(customerId);
+            return null;
+        }).when(customerService).deleteCustomerById(any(UUID.class));
+
+        this.mockMvc.perform(delete("/api/v1/customer/" + customer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
+
+        verify(customerService).deleteCustomerById(uuidCaptor.capture());
+        assertThat(uuidCaptor.getValue(), is(customer.getId()));
+        assertThat(customerServiceImpl.getAllCustomers().size(), is(2));
+    }
+
 
     @Test
     void testListCustomers() throws Exception {
