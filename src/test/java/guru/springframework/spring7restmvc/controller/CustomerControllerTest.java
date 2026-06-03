@@ -12,6 +12,8 @@ import guru.springframework.spring7restmvc.constants.ApiPaths;
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import guru.springframework.spring7restmvc.service.CustomerServiceImpl;
+
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +84,7 @@ class CustomerControllerTest {
   void testGetCustomerById() throws Exception {
     Customer customer = customerServiceImpl.getAllCustomers().getFirst();
 
-    when(customerService.getCustomerById(customer.getId())).thenReturn(customer);
+    when(customerService.getCustomerById(customer.getId())).thenReturn(Optional.of(customer));
 
     mockMvc
         .perform(get(ApiPaths.Customer.CUSTOMER_WITH_ID, customer.getId()))

@@ -14,6 +14,7 @@ import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.BeerServiceImpl;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
@@ -24,8 +25,10 @@ import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import tools.jackson.databind.ObjectMapper;
 
 @WebMvcTest(BeerController.class)
@@ -87,7 +90,7 @@ class BeerControllerTest {
   void getBeerById() throws Exception {
     Beer testBeer = beerServiceImpl.listBeers().getFirst();
 
-    when(beerService.getBeerById(testBeer.getId())).thenReturn(testBeer);
+    when(beerService.getBeerById(testBeer.getId())).thenReturn(Optional.of(testBeer));
 
     mockMvc
         .perform(
@@ -131,7 +134,7 @@ class BeerControllerTest {
   void getBeerByIdLastBeer() throws Exception {
     Beer testBeer = beerServiceImpl.listBeers().getLast();
 
-    when(beerService.getBeerById(testBeer.getId())).thenReturn(testBeer);
+    when(beerService.getBeerById(testBeer.getId())).thenReturn(Optional.of(testBeer));
 
     mockMvc
         .perform(
@@ -152,5 +155,14 @@ class BeerControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(String.valueOf(MediaType.APPLICATION_JSON)))
         .andExpect(jsonPath("$.length()", is(5)));
+  }
+
+
+  @Test
+  void getBeerNotFound() throws Exception {
+
+    when(beerService.getBeerById(any(UUID.class))).thenReturn(Optional.empty());
+    this.mockMvc.perform(get(ApiPaths.Beer.BEER_WITH_ID, UUID.randomUUID()))
+            .andExpect(status().isNotFound());
   }
 }

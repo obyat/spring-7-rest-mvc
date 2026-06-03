@@ -42,7 +42,7 @@ public class CustomerController {
   public Customer getCustomerById(@PathVariable("customerId") UUID id) {
     log.debug("Getting customer by id in controller: {}", id);
 
-    return customerService.getCustomerById(id);
+    return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
   }
 
   @PutMapping(ApiPaths.Customer.BY_ID)

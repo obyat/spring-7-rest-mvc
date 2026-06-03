@@ -39,7 +39,7 @@ public class BeerController {
   public Beer getBeerById(@PathVariable("beerId") UUID id) {
     log.debug("Getting beer by id in BeerController: {}", id);
     log.info("Getting beer by id in BeerController: {}", id);
-    return beerService.getBeerById(id);
+    return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
   }
 
   @PutMapping(ApiPaths.Beer.BY_ID)
