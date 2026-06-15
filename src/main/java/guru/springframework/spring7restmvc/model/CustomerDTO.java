@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class Customer {
+public class CustomerDTO {
   private UUID Id;
   private String customerName;
   private Integer version;

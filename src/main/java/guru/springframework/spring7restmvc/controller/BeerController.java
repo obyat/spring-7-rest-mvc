@@ -1,7 +1,7 @@
 package guru.springframework.spring7restmvc.controller;
 
 import guru.springframework.spring7restmvc.constants.ApiPaths;
-import guru.springframework.spring7restmvc.model.Beer;
+import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
 import java.util.List;
 import java.util.UUID;
@@ -20,37 +20,39 @@ public class BeerController {
   private final BeerService beerService;
 
   @PostMapping
-  public ResponseEntity<Beer> handlePost(@RequestBody Beer beer) {
-    Beer savedBeer = beerService.saveNewBeer(beer);
+  public ResponseEntity<BeerDTO> handlePost(@RequestBody BeerDTO beerDTO) {
+    BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add(
-        "Location", ApiPaths.Beer.BEER_WITH_ID.replace("{beerId}", savedBeer.getId().toString()));
+        "Location",
+        ApiPaths.Beer.BEER_WITH_ID.replace("{beerId}", savedBeerDTO.getId().toString()));
 
-    return new ResponseEntity<>(savedBeer, headers, HttpStatus.CREATED);
+    return new ResponseEntity<>(savedBeerDTO, headers, HttpStatus.CREATED);
   }
 
   @GetMapping()
-  public List<Beer> getAllBeers() {
+  public List<BeerDTO> getAllBeers() {
     return this.beerService.listBeers();
   }
 
   @GetMapping(value = ApiPaths.Beer.BY_ID)
-  public Beer getBeerById(@PathVariable("beerId") UUID id) {
+  public BeerDTO getBeerById(@PathVariable("beerId") UUID id) {
     log.debug("Getting beer by id in BeerController: {}", id);
     log.info("Getting beer by id in BeerController: {}", id);
     return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
   }
 
   @PutMapping(ApiPaths.Beer.BY_ID)
-  public ResponseEntity<Beer> updateById(@PathVariable UUID beerId, @RequestBody Beer beer) {
+  public ResponseEntity<BeerDTO> updateById(
+      @PathVariable UUID beerId, @RequestBody BeerDTO beerDTO) {
     log.debug("Updating beer by id in BeerController: {}", beerId);
-    beerService.updateBeerById(beerId, beer);
-    return new ResponseEntity<Beer>(HttpStatus.NO_CONTENT);
+    beerService.updateBeerById(beerId, beerDTO);
+    return new ResponseEntity<BeerDTO>(HttpStatus.NO_CONTENT);
   }
 
   @DeleteMapping(ApiPaths.Beer.BY_ID)
-  public ResponseEntity<Beer> deleteById(@PathVariable UUID beerId) {
+  public ResponseEntity<BeerDTO> deleteById(@PathVariable UUID beerId) {
     log.debug("Deleting beer by id in BeerController: {}", beerId);
     beerService.deleteBeerById(beerId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -1,15 +1,10 @@
-package guru.springframework.spring7restmvc.model;
+package guru.springframework.spring7restmvc.entities;
 
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
-@Builder
-@Data
-@AllArgsConstructor
 public class Beer {
   private UUID id;
   private Integer version;

@@ -1,9 +1,7 @@
 package guru.springframework.spring7restmvc.service;
 
-import guru.springframework.spring7restmvc.model.Customer;
-
+import guru.springframework.spring7restmvc.model.CustomerDTO;
 import java.util.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,53 +9,53 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-  private final Map<UUID, Customer> customerMap;
+  private final Map<UUID, CustomerDTO> customerMap;
 
   public CustomerServiceImpl() {
     this.customerMap = new HashMap<>();
 
-    Customer customer1 =
-        Customer.builder().Id(UUID.randomUUID()).customerName("Customer 1").version(1).build();
+    CustomerDTO CustomerDTO1 =
+        CustomerDTO.builder().Id(UUID.randomUUID()).customerName("Customer 1").version(1).build();
 
-    Customer customer2 =
-        Customer.builder().Id(UUID.randomUUID()).customerName("Customer 2").version(2).build();
+    CustomerDTO CustomerDTO2 =
+        CustomerDTO.builder().Id(UUID.randomUUID()).customerName("Customer 2").version(2).build();
 
-    Customer customer3 =
-        Customer.builder().Id(UUID.randomUUID()).customerName("Customer 3").version(3).build();
+    CustomerDTO CustomerDTO3 =
+        CustomerDTO.builder().Id(UUID.randomUUID()).customerName("Customer 3").version(3).build();
 
-    this.customerMap.put(customer1.getId(), customer1);
-    this.customerMap.put(customer2.getId(), customer2);
-    this.customerMap.put(customer3.getId(), customer3);
+    this.customerMap.put(CustomerDTO1.getId(), CustomerDTO1);
+    this.customerMap.put(CustomerDTO2.getId(), CustomerDTO2);
+    this.customerMap.put(CustomerDTO3.getId(), CustomerDTO3);
   }
 
   @Override
-  public List<Customer> getAllCustomers() {
-    return List.of(this.customerMap.values().toArray(new Customer[0]));
+  public List<CustomerDTO> getAllCustomers() {
+    return List.of(this.customerMap.values().toArray(new CustomerDTO[0]));
   }
 
   @Override
-  public Optional<Customer> getCustomerById(UUID id) {
+  public Optional<CustomerDTO> getCustomerById(UUID id) {
     return Optional.of(this.customerMap.get(id));
   }
 
   @Override
-  public Customer saveNewCustomer(Customer customer) {
-    Customer savedCustomer =
-        Customer.builder()
+  public CustomerDTO saveNewCustomer(CustomerDTO CustomerDTO) {
+    CustomerDTO savedCustomerDTO =
+        CustomerDTO.builder()
             .Id(UUID.randomUUID())
-            .customerName(customer.getCustomerName())
+            .customerName(CustomerDTO.getCustomerName())
             .version(1)
             .build();
-    this.customerMap.put(savedCustomer.getId(), savedCustomer);
-    return savedCustomer;
+    this.customerMap.put(savedCustomerDTO.getId(), savedCustomerDTO);
+    return savedCustomerDTO;
   }
 
   @Override
-  public void updateCustomerById(UUID id, Customer customer) {
-    Customer existingCustomer = this.customerMap.get(id);
-    existingCustomer.setCustomerName(customer.getCustomerName());
-    existingCustomer.setVersion(customer.getVersion());
-    this.customerMap.put(id, existingCustomer);
+  public void updateCustomerById(UUID id, CustomerDTO CustomerDTO) {
+    CustomerDTO existingCustomerDTO = this.customerMap.get(id);
+    existingCustomerDTO.setCustomerName(CustomerDTO.getCustomerName());
+    existingCustomerDTO.setVersion(CustomerDTO.getVersion());
+    this.customerMap.put(id, existingCustomerDTO);
   }
 
   @Override
