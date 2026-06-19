@@ -6,7 +6,7 @@ import guru.springframework.spring7restmvc.model.CustomerDTO;
 import org.mapstruct.Mapper;
 
 @Mapper
-public class CustomerMapper {
+public interface CustomerMapper {
 
     Customer customerDtoToCustomer(CustomerDTO dto);
 
