@@ -96,13 +96,13 @@ public class BootstrapData implements CommandLineRunner {
         }
 
         Customer Customer1 =
-                Customer.builder().customerName("Customer 1").version(1).build();
+                Customer.builder().customerName("Customer 1").build();
 
         Customer Customer2 =
-                Customer.builder().customerName("Customer 2").version(2).build();
+                Customer.builder().customerName("Customer 2").build();
 
         Customer Customer3 =
-                Customer.builder().customerName("Customer 3").version(3).build();
+                Customer.builder().customerName("Customer 3").build();
 
         customerRepository.saveAll(List.of(Customer1, Customer2, Customer3));
     }

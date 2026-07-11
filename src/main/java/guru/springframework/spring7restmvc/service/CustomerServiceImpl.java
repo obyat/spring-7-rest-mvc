@@ -1,8 +1,12 @@
 package guru.springframework.spring7restmvc.service;
 
+import guru.springframework.spring7restmvc.mappers.CustomerMapper;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import java.util.*;
+
+import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -15,13 +19,13 @@ public class CustomerServiceImpl implements CustomerService {
     this.customerMap = new HashMap<>();
 
     CustomerDTO CustomerDTO1 =
-        CustomerDTO.builder().Id(UUID.randomUUID()).customerName("Customer 1").version(1).build();
+        CustomerDTO.builder().id(UUID.randomUUID()).customerName("Customer 1").version(1).build();
 
     CustomerDTO CustomerDTO2 =
-        CustomerDTO.builder().Id(UUID.randomUUID()).customerName("Customer 2").version(2).build();
+        CustomerDTO.builder().id(UUID.randomUUID()).customerName("Customer 2").version(2).build();
 
     CustomerDTO CustomerDTO3 =
-        CustomerDTO.builder().Id(UUID.randomUUID()).customerName("Customer 3").version(3).build();
+        CustomerDTO.builder().id(UUID.randomUUID()).customerName("Customer 3").version(3).build();
 
     this.customerMap.put(CustomerDTO1.getId(), CustomerDTO1);
     this.customerMap.put(CustomerDTO2.getId(), CustomerDTO2);
@@ -41,8 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   public CustomerDTO saveNewCustomer(CustomerDTO CustomerDTO) {
     CustomerDTO savedCustomerDTO =
-        CustomerDTO.builder()
-            .Id(UUID.randomUUID())
+        guru.springframework.spring7restmvc.model.CustomerDTO.builder()
+            .id(UUID.randomUUID())
             .customerName(CustomerDTO.getCustomerName())
             .version(1)
             .build();

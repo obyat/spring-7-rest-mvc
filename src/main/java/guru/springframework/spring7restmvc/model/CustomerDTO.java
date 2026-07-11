@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CustomerDTO {
-  private UUID Id;
+  private UUID id;
   private String customerName;
   private Integer version;
   private LocalDateTime createdDate;

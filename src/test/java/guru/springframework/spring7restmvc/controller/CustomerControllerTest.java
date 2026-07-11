@@ -89,7 +89,7 @@ class CustomerControllerTest {
         .perform(get(ApiPaths.Customer.CUSTOMER_WITH_ID, CustomerDTO.getId()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.Id", is(CustomerDTO.getId().toString())))
+        .andExpect(jsonPath("$.id", is(CustomerDTO.getId().toString())))
         .andExpect(jsonPath("$.customerName", is(CustomerDTO.getCustomerName())));
   }
 

@@ -19,7 +19,7 @@ public class Customer {
   @GeneratedValue(generator = "UUID")
   @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
   @UuidGenerator
-  private UUID Id;
+  private UUID id;
   private String customerName;
   @Version
   private Integer version;
