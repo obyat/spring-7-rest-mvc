@@ -1,9 +1,7 @@
 package guru.springframework.spring7restmvc.entities;
 
-import guru.springframework.spring7restmvc.model.BeerStyle;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;

@@ -120,7 +120,7 @@ public class BeerServiceImpl implements BeerService {
   }
 
   @Override
-  public void updateBeerById(UUID id, BeerDTO beerDTO) {
+  public Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO) {
     BeerDTO existingBeerDTO = this.beerMap.get(id);
     existingBeerDTO.setBeerName(beerDTO.getBeerName());
     existingBeerDTO.setVersion(beerDTO.getVersion());
@@ -130,6 +130,7 @@ public class BeerServiceImpl implements BeerService {
     existingBeerDTO.setUpdatedDate(LocalDateTime.now());
 
     this.beerMap.put(id, existingBeerDTO);
+    return Optional.ofNullable(existingBeerDTO);
   }
 
   @Override
