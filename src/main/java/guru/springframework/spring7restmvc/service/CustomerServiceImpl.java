@@ -37,10 +37,12 @@ public class CustomerServiceImpl implements CustomerService {
     return List.of(this.customerMap.values().toArray(new CustomerDTO[0]));
   }
 
+
   @Override
   public Optional<CustomerDTO> getCustomerById(UUID id) {
     return Optional.of(this.customerMap.get(id));
   }
+
 
   @Override
   public CustomerDTO saveNewCustomer(CustomerDTO CustomerDTO) {
@@ -54,6 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     return savedCustomerDTO;
   }
 
+
   @Override
   public void updateCustomerById(UUID id, CustomerDTO CustomerDTO) {
     CustomerDTO existingCustomerDTO = this.customerMap.get(id);
@@ -61,6 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
     existingCustomerDTO.setVersion(CustomerDTO.getVersion());
     this.customerMap.put(id, existingCustomerDTO);
   }
+
 
   @Override
   public void deleteCustomerById(UUID customerId) {

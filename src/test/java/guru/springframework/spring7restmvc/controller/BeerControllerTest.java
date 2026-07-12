@@ -145,6 +145,7 @@ class BeerControllerTest {
         .andExpect(jsonPath("$.beerName", is(testBeerDTO.getBeerName())));
   }
 
+
   @Test
   void testListBeers() throws Exception {
     when(beerService.listBeers()).thenReturn(beerServiceImpl.listBeers());
@@ -155,6 +156,7 @@ class BeerControllerTest {
         .andExpect(content().contentType(String.valueOf(MediaType.APPLICATION_JSON)))
         .andExpect(jsonPath("$.length()", is(5)));
   }
+
 
   @Test
   void getBeerNotFound() throws Exception {
