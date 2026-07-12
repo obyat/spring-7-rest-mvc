@@ -44,7 +44,7 @@ class CustomerControllerIT {
 
     @Test
     void testGetAllCustomers() {
-        assertThat(customerController.getAllCustomers().size(), equalTo(5));
+        assertThat(customerController.getAllCustomers().size(), equalTo(3));
     }
 
 

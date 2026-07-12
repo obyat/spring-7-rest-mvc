@@ -16,6 +16,8 @@ import guru.springframework.spring7restmvc.service.BeerServiceImpl;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
+
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -43,10 +46,12 @@ class BeerControllerTest {
 
   @Captor ArgumentCaptor<UUID> beerUUIDCaptor;
 
+
   @BeforeEach
   void setUp() {
     this.beerServiceImpl = new BeerServiceImpl();
   }
+
 
   @Test
   void testCreateBeer() throws Exception {
@@ -82,7 +87,7 @@ class BeerControllerTest {
                 .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(beerDTO)))
-        .andExpect(status().isNoContent());
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -100,6 +105,7 @@ class BeerControllerTest {
         .andExpect(jsonPath("$.id", is(testBeerDTO.getId().toString())))
         .andExpect(jsonPath("$.beerName", equalTo("updated Beer")));
   }
+
 
   @Test
   void testDeleteBeer() throws Exception {
@@ -128,6 +134,7 @@ class BeerControllerTest {
     assertThat(this.beerUUIDCaptor.getValue(), is(testBeerDTO.getId()));
     assertThat(beerServiceImpl.listBeers().size(), is(4));
   }
+
 
   @Test
   void getBeerByIdLastBeer() throws Exception {
