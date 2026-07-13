@@ -48,15 +48,23 @@ public class CustomerController {
   @PutMapping(ApiPaths.Customer.BY_ID)
   public ResponseEntity<CustomerDTO> updateCustomerById(
       @PathVariable UUID customerId, @RequestBody CustomerDTO CustomerDTO) {
+
+    if(customerService.getCustomerById(customerId).isEmpty()) {
+      throw new NotFoundException();
+    }
+
     log.debug("Updating customer by id in controller: {}", customerId);
     customerService.updateCustomerById(customerId, CustomerDTO);
-    return new ResponseEntity<CustomerDTO>(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @DeleteMapping(ApiPaths.Customer.BY_ID)
   public ResponseEntity<CustomerDTO> deleteCustomerById(@PathVariable UUID customerId) {
+    Boolean deleted = customerService.deleteCustomerById(customerId);
+    if (!Boolean.TRUE.equals(deleted)) {
+      throw new NotFoundException();
+    }
     log.debug("Deleting customer by id in controller: {}", customerId);
-    this.customerService.deleteCustomerById(customerId);
-    return new ResponseEntity<CustomerDTO>(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

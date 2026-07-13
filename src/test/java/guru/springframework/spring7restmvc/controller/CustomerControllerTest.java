@@ -68,6 +68,8 @@ class CustomerControllerTest {
   void testUpdateCustomer() throws Exception {
     CustomerDTO CustomerDTO = this.customerServiceImpl.getAllCustomers().getFirst();
 
+    when(this.customerService.getCustomerById(CustomerDTO.getId())).thenReturn(Optional.of(CustomerDTO));
+
     this.mockMvc
         .perform(
             put(ApiPaths.Customer.CUSTOMER_WITH_ID, CustomerDTO.getId().toString())
@@ -102,7 +104,7 @@ class CustomerControllerTest {
             invocation -> {
               java.util.UUID customerId = invocation.getArgument(0);
               customerServiceImpl.deleteCustomerById(customerId);
-              return null;
+              return true;
             })
         .when(customerService)
         .deleteCustomerById(any(UUID.class));

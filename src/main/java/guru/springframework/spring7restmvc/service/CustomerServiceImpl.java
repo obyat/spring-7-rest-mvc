@@ -1,12 +1,9 @@
 package guru.springframework.spring7restmvc.service;
 
-import guru.springframework.spring7restmvc.mappers.CustomerMapper;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import java.util.*;
 
-import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -58,16 +55,18 @@ public class CustomerServiceImpl implements CustomerService {
 
 
   @Override
-  public void updateCustomerById(UUID id, CustomerDTO CustomerDTO) {
+  public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO CustomerDTO) {
     CustomerDTO existingCustomerDTO = this.customerMap.get(id);
     existingCustomerDTO.setCustomerName(CustomerDTO.getCustomerName());
     existingCustomerDTO.setVersion(CustomerDTO.getVersion());
     this.customerMap.put(id, existingCustomerDTO);
+    return Optional.of(existingCustomerDTO);
   }
 
 
   @Override
-  public void deleteCustomerById(UUID customerId) {
+  public Boolean deleteCustomerById(UUID customerId) {
     this.customerMap.remove(customerId);
+    return true;
   }
 }

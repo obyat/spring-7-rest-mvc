@@ -130,11 +130,12 @@ public class BeerServiceImpl implements BeerService {
     existingBeerDTO.setUpdatedDate(LocalDateTime.now());
 
     this.beerMap.put(id, existingBeerDTO);
-    return Optional.ofNullable(existingBeerDTO);
+    return Optional.of(existingBeerDTO);
   }
 
   @Override
-  public void deleteBeerById(UUID beerId) {
+  public Boolean deleteBeerById(UUID beerId) {
     this.beerMap.remove(beerId);
+    return true;
   }
 }

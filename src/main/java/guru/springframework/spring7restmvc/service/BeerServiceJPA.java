@@ -5,6 +5,8 @@ import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,7 +71,11 @@ public class BeerServiceJPA implements BeerService {
 
 
     @Override
-    public void deleteBeerById(UUID beerId) {
-
+    public Boolean deleteBeerById(UUID beerId) {
+        if (!beerRepository.existsById(beerId)) {
+            return false;
+        }
+        beerRepository.deleteById(beerId);
+        return true;
     }
 }

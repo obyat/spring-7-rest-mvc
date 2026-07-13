@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,9 +15,11 @@ import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.BeerServiceImpl;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.persistence.Version;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
@@ -111,6 +114,8 @@ class BeerControllerTest {
   void testDeleteBeer() throws Exception {
     BeerDTO testBeerDTO = beerServiceImpl.listBeers().getFirst();
 
+    given(beerService.deleteBeerById(testBeerDTO.getId())).willReturn(true);
+
     assertThat(beerServiceImpl.listBeers().size(), is(5));
 
     // Make the mocked service's deleteById affect the real in-memory impl
@@ -118,7 +123,7 @@ class BeerControllerTest {
             invocation -> {
               java.util.UUID id = invocation.getArgument(0);
               beerServiceImpl.deleteBeerById(testBeerDTO.getId());
-              return null;
+                return true;
             })
         .when(beerService)
         .deleteBeerById(testBeerDTO.getId());
