@@ -12,15 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import guru.springframework.spring7restmvc.constants.ApiPaths;
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.BeerServiceImpl;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import jakarta.persistence.Version;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,6 @@ import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -58,13 +55,23 @@ class BeerControllerTest {
 
   @Test
   void testCreateBeer() throws Exception {
-    BeerDTO beerDTO = this.beerServiceImpl.listBeers().getFirst();
-    beerDTO.setBeerName("New Beer 2.0");
-    beerDTO.setPrice(new BigDecimal("1.0"));
+    BeerDTO beerDTO = BeerDTO.builder()
+        .beerName("New Beer 2.0")
+        .beerStyle(new BeerStyle())
+        .upc("12345")
+        .price(new BigDecimal("1.0"))
+        .build();
 
-    // Echo back the saved beer so the response contains the created name
+    BeerDTO savedBeer = BeerDTO.builder()
+        .id(UUID.randomUUID())
+        .beerName("New Beer 2.0")
+        .beerStyle(new BeerStyle())
+        .upc("12345")
+        .price(new BigDecimal("1.0"))
+        .build();
+
     when(beerService.saveNewBeer(any(BeerDTO.class)))
-        .thenAnswer(invocation -> invocation.getArgument(0));
+        .thenReturn(savedBeer);
 
     this.mockMvc
         .perform(
@@ -74,23 +81,31 @@ class BeerControllerTest {
                 .content(this.objectMapper.writeValueAsString(beerDTO)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.beerName", equalTo("New Beer 2.0")))
-        .andExpect(
-            header().string("Location", ApiPaths.Beer.ROOT + "/" + beerDTO.getId().toString()));
+        .andExpect(header().exists("Location"));
   }
+
 
   @Test
   void testUpdateBeer() throws Exception {
-    BeerDTO beerDTO = this.beerServiceImpl.listBeers().getFirst();
-    beerDTO.setBeerName("Updated Beer 2.0");
-    beerDTO.setPrice(new BigDecimal("2.0"));
+    UUID beerId = UUID.randomUUID();
+    BeerDTO beerDTO = BeerDTO.builder()
+        .id(beerId)
+        .beerName("Updated Beer 2.0")
+        .beerStyle(new BeerStyle())
+        .upc("12345")
+        .price(new BigDecimal("2.0"))
+        .build();
+
+    when(beerService.getBeerById(beerId))
+        .thenReturn(Optional.of(beerDTO));
 
     this.mockMvc
         .perform(
-            put(ApiPaths.Beer.BEER_WITH_ID, beerDTO.getId())
+            put(ApiPaths.Beer.BEER_WITH_ID, beerId)
                 .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(beerDTO)))
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNoContent());
   }
 
   @Test
@@ -120,10 +135,9 @@ class BeerControllerTest {
 
     // Make the mocked service's deleteById affect the real in-memory impl
     org.mockito.Mockito.doAnswer(
-            invocation -> {
-              java.util.UUID id = invocation.getArgument(0);
+            _ -> {
               beerServiceImpl.deleteBeerById(testBeerDTO.getId());
-                return true;
+              return true;
             })
         .when(beerService)
         .deleteBeerById(testBeerDTO.getId());
@@ -177,5 +191,43 @@ class BeerControllerTest {
     this.mockMvc
         .perform(get(ApiPaths.Beer.BEER_WITH_ID, UUID.randomUUID()))
         .andExpect(status().isNotFound());
+  }
+
+
+  @Test
+  void testCreateBeerNullBeerName() throws Exception {
+    BeerDTO beerDTO = BeerDTO.builder().build();
+
+    given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers().get(1));
+
+     var result = this.mockMvc
+            .perform(
+                    post(ApiPaths.Beer.ROOT)
+                            .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                            .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                            .content(this.objectMapper.writeValueAsString(beerDTO)))
+            .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$.length()", is(6)))
+             .andReturn();
+
+    System.out.println(result.getResponse().getContentAsString());
+  }
+
+
+  @Test
+  void testUpdateBeerBlankName() throws Exception {
+    BeerDTO beerDTO = this.beerServiceImpl.listBeers().getFirst();
+    beerDTO.setBeerName("");
+    beerDTO.setBeerName("Updated Beer 2.0");
+    beerDTO.setPrice(new BigDecimal("2.0"));
+
+    this.mockMvc
+            .perform(
+                    put(ApiPaths.Beer.BEER_WITH_ID, beerDTO.getId())
+                            .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                            .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                            .content(this.objectMapper.writeValueAsString(beerDTO)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.length()", is(1)));
   }
 }

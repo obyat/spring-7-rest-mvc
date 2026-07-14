@@ -1,0 +1,27 @@
+[
+  {
+    "objectName": "beerDTO",
+    "field": "beerName",
+    "rejectedValue": null,
+    "codes": [
+      "NotBlank.beerDTO.beerName",
+      "NotBlank.beerName",
+      "NotBlank.java.lang.String",
+      "NotBlank"
+    ],
+    "arguments": [
+      {
+        "arguments": null,
+        "code": "beerName",
+        "codes": [
+          "beerDTO.beerName",
+          "beerName"
+        ],
+        "defaultMessage": "beerName"
+      }
+    ],
+    "bindingFailure": false,
+    "code": "NotBlank",
+    "defaultMessage": "must not be blank"
+  }
+]

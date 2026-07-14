@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -19,22 +20,25 @@ import org.springframework.web.bind.annotation.*;
 public class BeerController {
   private final BeerService beerService;
 
+
   @PostMapping
-  public ResponseEntity<BeerDTO> handlePost(@RequestBody BeerDTO beerDTO) {
+  public ResponseEntity<BeerDTO> handlePost(@Valid @RequestBody BeerDTO beerDTO) {
     BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add(
-        "Location",
-        ApiPaths.Beer.BEER_WITH_ID.replace("{beerId}", savedBeerDTO.getId().toString()));
+            "Location",
+            ApiPaths.Beer.BEER_WITH_ID.replace("{beerId}", savedBeerDTO.getId().toString()));
 
     return new ResponseEntity<>(savedBeerDTO, headers, HttpStatus.CREATED);
   }
+
 
   @GetMapping()
   public List<BeerDTO> getAllBeers() {
     return this.beerService.listBeers();
   }
+
 
   @GetMapping(value = ApiPaths.Beer.BY_ID)
   public BeerDTO getBeerById(@PathVariable("beerId") UUID id) {
@@ -42,10 +46,11 @@ public class BeerController {
     return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
   }
 
+
   @PutMapping(ApiPaths.Beer.BY_ID)
   public ResponseEntity<BeerDTO> updateById(
-      @PathVariable UUID beerId, @RequestBody BeerDTO beerDTO) {
-    if(beerService.getBeerById(beerId).isEmpty()) {
+          @PathVariable UUID beerId, @Valid @RequestBody BeerDTO beerDTO) {
+    if (beerService.getBeerById(beerId).isEmpty()) {
       throw new NotFoundException();
     }
 
@@ -53,6 +58,7 @@ public class BeerController {
     beerService.updateBeerById(beerId, beerDTO);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
+
 
   @DeleteMapping(ApiPaths.Beer.BY_ID)
   public ResponseEntity<BeerDTO> deleteById(@PathVariable UUID beerId) {
