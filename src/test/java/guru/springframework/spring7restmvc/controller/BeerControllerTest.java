@@ -68,7 +68,7 @@ class BeerControllerTest {
     void testCreateBeer() throws Exception {
         BeerDTO beerDTO = BeerDTO.builder()
                 .beerName("New Beer 2.0")
-                .beerStyle(new BeerStyle())
+                .beerStyle(BeerStyle.ALE)
                 .upc("12345")
                 .price(new BigDecimal("1.0"))
                 .build();
@@ -76,7 +76,7 @@ class BeerControllerTest {
         BeerDTO savedBeer = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .beerName("New Beer 2.0")
-                .beerStyle(new BeerStyle())
+                .beerStyle(BeerStyle.ALE)
                 .upc("12345")
                 .price(new BigDecimal("1.0"))
                 .build();
@@ -102,7 +102,7 @@ class BeerControllerTest {
         BeerDTO beerDTO = BeerDTO.builder()
                 .id(beerId)
                 .beerName("Updated Beer 2.0")
-                .beerStyle(new BeerStyle())
+                .beerStyle(BeerStyle.ALE)
                 .upc("12345")
                 .price(new BigDecimal("2.0"))
                 .build();

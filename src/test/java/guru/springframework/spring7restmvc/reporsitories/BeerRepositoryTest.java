@@ -23,6 +23,7 @@ class BeerRepositoryTest {
     void testSaveBeer() {
         Beer beer = beerRepository.save(Beer.builder()
                 .beerName("Test Beer")
+                .beerStyle(guru.springframework.spring7restmvc.model.BeerStyle.ALE)
                 .price(new java.math.BigDecimal("9.99"))
                 .upc("123456789012")
                 .build());
@@ -40,6 +41,7 @@ class BeerRepositoryTest {
         assertThrows(ConstraintViolationException.class, () -> {
             Beer beer = beerRepository.save(Beer.builder()
                     .beerName("Test Beer with a very long name that is over fifty characters")
+                    .beerStyle(guru.springframework.spring7restmvc.model.BeerStyle.ALE)
                     .price(new java.math.BigDecimal("9.99"))
                     .upc("123456789012")
                     .build());

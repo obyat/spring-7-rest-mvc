@@ -58,7 +58,7 @@ public class BeerServiceJPA implements BeerService {
 
         beerRepository.findById(id).ifPresentOrElse(beer -> {
             beer.setBeerName(beerDTO.getBeerName());
-//            beer.setBeerStyle(beerDTO.getBeerStyle());
+            beer.setBeerStyle(beerDTO.getBeerStyle());
             beer.setPrice(beerDTO.getPrice());
             beer.setUpc(beerDTO.getUpc());
 

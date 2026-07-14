@@ -1,10 +1,14 @@
 package guru.springframework.spring7restmvc.model;
 
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-
-
-@Builder
-@RequiredArgsConstructor
-public class BeerStyle {
+public enum BeerStyle {
+    LAGER,
+    PILSNER,
+    IPA,
+    STOUT,
+    ALE,
+    WHEAT,
+    PALE_ALE,
+    PORTER,
+    GOSE,
+    SAISON
 }

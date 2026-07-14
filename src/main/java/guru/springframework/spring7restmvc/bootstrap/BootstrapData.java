@@ -4,6 +4,7 @@ import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,7 @@ public class BootstrapData implements CommandLineRunner {
         Beer beer1 =
                 Beer.builder()
                         .beerName("Midnight Hops")
+                        .beerStyle(BeerStyle.IPA)
                         .upc("98237465")
                         .price(new BigDecimal("14.99"))
                         .quantityOnHand(88)
@@ -52,6 +54,7 @@ public class BootstrapData implements CommandLineRunner {
         Beer beer2 =
                 Beer.builder()
                         .beerName("Sunset Lager")
+                        .beerStyle(BeerStyle.LAGER)
                         .upc("44556677")
                         .price(new BigDecimal("10.49"))
                         .quantityOnHand(210)
@@ -62,6 +65,7 @@ public class BootstrapData implements CommandLineRunner {
         Beer beer3 =
                 Beer.builder()
                         .beerName("Velvet Stout")
+                        .beerStyle(BeerStyle.STOUT)
                         .upc("77889900")
                         .price(new BigDecimal("16.75"))
                         .quantityOnHand(64)
@@ -72,6 +76,7 @@ public class BootstrapData implements CommandLineRunner {
         Beer beer4 =
                 Beer.builder()
                         .beerName("Citrus Blaze IPA")
+                        .beerStyle(BeerStyle.IPA)
                         .upc("11235813")
                         .price(new BigDecimal("13.25"))
                         .quantityOnHand(145)
@@ -82,6 +87,7 @@ public class BootstrapData implements CommandLineRunner {
         Beer beer5 =
                 Beer.builder()
                         .beerName("Arctic Pilsner")
+                        .beerStyle(BeerStyle.PILSNER)
                         .upc("99887766")
                         .price(new BigDecimal("11.99"))
                         .quantityOnHand(97)

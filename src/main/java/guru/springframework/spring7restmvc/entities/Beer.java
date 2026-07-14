@@ -1,10 +1,13 @@
 package guru.springframework.spring7restmvc.entities;
 
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Version;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -42,7 +45,8 @@ public class Beer {
     @Column(length = 50)
     private String beerName;
     @NotNull
-    //  private BeerStyle beerStyle;
+    @Enumerated(EnumType.STRING)
+    private BeerStyle beerStyle;
     @NotNull
     @NotEmpty
     @Size(max = 255)
