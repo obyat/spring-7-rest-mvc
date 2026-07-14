@@ -5,7 +5,6 @@ import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +33,12 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
-            return Optional.ofNullable(
-                    customerMapper.customerToCustomerDto(
-                            customerRepository
-                                    .findById(id)
-                                    .orElse(null)));
-        }
-
+        return Optional.ofNullable(
+                customerMapper.customerToCustomerDto(
+                        customerRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
 
 
     @Override
@@ -63,9 +60,10 @@ public class CustomerServiceJPA implements CustomerService {
         return atomicReference.get();
     }
 
+
     @Override
     public Boolean deleteCustomerById(UUID customerId) {
-        if(!customerRepository.existsById(customerId)){
+        if (!customerRepository.existsById(customerId)) {
             return false;
         }
         customerRepository.deleteById(customerId);

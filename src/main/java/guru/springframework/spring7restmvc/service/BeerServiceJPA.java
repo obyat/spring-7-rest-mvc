@@ -5,8 +5,6 @@ import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
 
 @Service
 @Primary
@@ -31,6 +30,7 @@ public class BeerServiceJPA implements BeerService {
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Optional<BeerDTO> getBeerById(UUID id) {

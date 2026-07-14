@@ -1,21 +1,21 @@
 package guru.springframework.spring7restmvc.service;
 
 import guru.springframework.spring7restmvc.model.BeerDTO;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 public interface BeerService {
 
-  List<BeerDTO> listBeers();
+    List<BeerDTO> listBeers();
 
-  Optional<BeerDTO> getBeerById(UUID id);
+    Optional<BeerDTO> getBeerById(UUID id);
 
-  BeerDTO saveNewBeer(BeerDTO beerDTO);
+    BeerDTO saveNewBeer(BeerDTO beerDTO);
 
-  Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO);
+    Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO);
 
-  Boolean deleteBeerById(UUID beerId);
+    Boolean deleteBeerById(UUID beerId);
 }

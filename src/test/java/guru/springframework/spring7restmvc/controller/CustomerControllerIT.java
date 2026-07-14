@@ -1,9 +1,7 @@
 package guru.springframework.spring7restmvc.controller;
 
 import guru.springframework.spring7restmvc.entities.Customer;
-import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.mappers.CustomerMapper;
-import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +20,7 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 @SpringBootTest
 class CustomerControllerIT {
@@ -115,7 +114,8 @@ class CustomerControllerIT {
 
         customerDTO.setCustomerName(customerName);
 
-        ResponseEntity<CustomerDTO> responseEntity = customerController.updateCustomerById(customer.getId(), customerDTO);
+        ResponseEntity<CustomerDTO> responseEntity = customerController.updateCustomerById(customer.getId(),
+                customerDTO);
         AssertionsForClassTypes.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
 
         Customer updatedCustomer = customerRepository.findById(customer.getId()).get();
@@ -125,7 +125,8 @@ class CustomerControllerIT {
 
     @Test
     void testUpdateNoteFound() {
-        assertThrows((NotFoundException.class), () -> customerController.updateCustomerById(UUID.randomUUID(), CustomerDTO.builder().build()));
+        assertThrows((NotFoundException.class), () -> customerController.updateCustomerById(UUID.randomUUID(),
+                CustomerDTO.builder().build()));
     }
 
 
@@ -141,7 +142,6 @@ class CustomerControllerIT {
         AssertionsForClassTypes.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
         AssertionsForClassTypes.assertThat(foundCustomer).isNull();
     }
-
 
 
 }

@@ -6,4 +6,5 @@ import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor
-public class BeerStyle {}
+public class BeerStyle {
+}

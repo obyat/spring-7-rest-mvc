@@ -10,6 +10,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @DataJpaTest
 class BootstrapDataTest {
 
@@ -21,10 +22,12 @@ class BootstrapDataTest {
 
     BootstrapData bootstrapData;
 
+
     @BeforeEach
     void setUp() {
         bootstrapData = new BootstrapData(beerRepository, customerRepository);
     }
+
 
     @Test
     void Testrun() throws Exception {

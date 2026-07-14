@@ -18,9 +18,10 @@ class BeerRepositoryTest {
     @Autowired
     BeerRepository beerRepository;
 
+
     @Test
-    void testSaveBeer(){
-        Beer beer = beerRepository.save( Beer.builder()
+    void testSaveBeer() {
+        Beer beer = beerRepository.save(Beer.builder()
                 .beerName("Test Beer")
                 .price(new java.math.BigDecimal("9.99"))
                 .upc("123456789012")
@@ -35,9 +36,9 @@ class BeerRepositoryTest {
 
 
     @Test
-    void testSaveBeerTooLong(){
+    void testSaveBeerTooLong() {
         assertThrows(ConstraintViolationException.class, () -> {
-            Beer beer = beerRepository.save( Beer.builder()
+            Beer beer = beerRepository.save(Beer.builder()
                     .beerName("Test Beer with a very long name that is over fifty characters")
                     .price(new java.math.BigDecimal("9.99"))
                     .upc("123456789012")

@@ -4,7 +4,6 @@ import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -13,13 +12,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Component
 @RequiredArgsConstructor
 public class BootstrapData implements CommandLineRunner {
-    
+
     private final BeerRepository beerRepository;
     private final CustomerRepository customerRepository;
-    
+
+
     /**
      * Callback used to run the bean.
      *
@@ -31,6 +32,7 @@ public class BootstrapData implements CommandLineRunner {
         populateBeerDb();
         populateCustomerDb();
     }
+
 
     private void populateBeerDb() {
         if (beerRepository.count() > 0) {
@@ -86,9 +88,11 @@ public class BootstrapData implements CommandLineRunner {
                         .createdDate(LocalDateTime.now())
                         .updatedDate(LocalDateTime.now())
                         .build();
-        
-        beerRepository.saveAll(List.of(beer1, beer2, beer3, beer4, beer5));;
+
+        beerRepository.saveAll(List.of(beer1, beer2, beer3, beer4, beer5));
+        ;
     }
+
 
     private void populateCustomerDb() {
         if (customerRepository.count() > 0) {

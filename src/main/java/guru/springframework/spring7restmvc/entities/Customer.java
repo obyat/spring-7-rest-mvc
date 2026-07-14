@@ -1,12 +1,20 @@
 package guru.springframework.spring7restmvc.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Version;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 
 @Builder
 @Getter
@@ -15,14 +23,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 public class Customer {
-  @Id
-  @GeneratedValue(generator = "UUID")
-  @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-  @UuidGenerator
-  private UUID id;
-  private String customerName;
-  @Version
-  private Integer version;
-  private LocalDateTime createdDate;
-  private LocalDateTime lastModifiedDate;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @UuidGenerator
+    private UUID id;
+    private String customerName;
+    @Version
+    private Integer version;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }
