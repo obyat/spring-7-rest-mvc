@@ -14,17 +14,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest // complete sp context not just splice
@@ -50,9 +53,10 @@ class BeerControllerIT {
 
 
     @BeforeEach
-    void setup(){
+    void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
+
 
     @Test
     void testListBeers() {
@@ -111,6 +115,7 @@ class BeerControllerIT {
 
     }
 
+
     @Test
     void testUpdateExistingBeer() {
         Beer beer = beerRepository.findAll().get(0);
@@ -149,9 +154,11 @@ class BeerControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
+
     @Test
     void testUpdateNoteFound() {
-        assertThrows((NotFoundException.class), () -> beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build()));
+        assertThrows((NotFoundException.class), () -> beerController.updateById(UUID.randomUUID(),
+                BeerDTO.builder().build()));
     }
 
 
@@ -168,10 +175,11 @@ class BeerControllerIT {
         assertThat(foundBeer).isNull();
     }
 
+
     @Transactional
     @Rollback
     @Test
-    void testDeleteByIDNotFound(){
+    void testDeleteByIDNotFound() {
         assertThrows(NotFoundException.class, () -> beerController.deleteById(UUID.randomUUID()));
     }
 }
