@@ -55,6 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
                         .id(UUID.randomUUID())
                         .customerName(CustomerDTO.getCustomerName())
                         .version(1)
+                        .email(CustomerDTO.getEmail())
                         .build();
         this.customerMap.put(savedCustomerDTO.getId(), savedCustomerDTO);
         return savedCustomerDTO;
@@ -66,6 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerDTO existingCustomerDTO = this.customerMap.get(id);
         existingCustomerDTO.setCustomerName(CustomerDTO.getCustomerName());
         existingCustomerDTO.setVersion(CustomerDTO.getVersion());
+        existingCustomerDTO.setEmail(CustomerDTO.getEmail());
         this.customerMap.put(id, existingCustomerDTO);
         return Optional.of(existingCustomerDTO);
     }

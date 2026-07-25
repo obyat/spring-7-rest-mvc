@@ -1,0 +1,33 @@
+CREATE
+DATABASE IF NOT EXISTS restdb
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+GRANT
+SELECT,
+INSERT
+,
+UPDATE,
+DELETE
+,
+    CREATE
+,
+    DROP
+,
+    REFERENCES,
+    INDEX,
+    ALTER
+,
+    EXECUTE,
+CREATE VIEW,
+    SHOW VIEW,
+CREATE
+ROUTINE,
+    ALTER ROUTINE
+,
+    TRIGGER
+ON restdb.*
+TO 'restadmin'@'localhost';
+
+FLUSH
+PRIVILEGES;

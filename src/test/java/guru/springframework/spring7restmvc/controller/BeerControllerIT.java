@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
@@ -26,11 +27,12 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest // complete sp context not just splice
+@AutoConfigureMockMvc
 class BeerControllerIT {
 
     @Autowired
@@ -142,12 +144,13 @@ class BeerControllerIT {
         Beer beer = beerRepository.findAll().get(0);
 
         Map<String, Object> beerMap = new HashMap<>();
-        beerMap.put("beerName", "New Updated Name with a very long name over fifty characters!");
+        beerMap.put("beerName", "New Updated Name with a very long name over fifty characters which should fail " +
+                "because we cannot add this many characters to a name!");
 
 
         this.mockMvc
                 .perform(
-                        post(ApiPaths.Beer.BEER_WITH_ID, beer.getId())
+                        put(ApiPaths.Beer.BEER_WITH_ID, beer.getId())
                                 .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(beerMap)))

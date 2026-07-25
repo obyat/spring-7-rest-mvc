@@ -2,9 +2,9 @@ package guru.springframework.spring7restmvc.bootstrap;
 
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.Customer;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
-import guru.springframework.spring7restmvc.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -106,7 +106,7 @@ public class BootstrapData implements CommandLineRunner {
         }
 
         Customer Customer1 =
-                Customer.builder().customerName("Customer 1").build();
+                Customer.builder().customerName("Customer 1").email("customeEmail@gmail.com").build();
 
         Customer Customer2 =
                 Customer.builder().customerName("Customer 2").build();
