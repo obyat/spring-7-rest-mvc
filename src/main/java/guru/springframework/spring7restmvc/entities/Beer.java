@@ -16,7 +16,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
@@ -47,7 +49,6 @@ public class Beer {
     // Size constraint validation is good because it checks before @Column writes to database with a column size
     @Column(length = 50)
     private String beerName;
-    @NotNull
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.SMALLINT)
     private BeerStyle beerStyle;
@@ -58,6 +59,8 @@ public class Beer {
     private Integer quantityOnHand;
     @NotNull
     private BigDecimal price;
+    @CreationTimestamp
     private LocalDateTime createdDate;
+    @UpdateTimestamp
     private LocalDateTime updatedDate;
 }

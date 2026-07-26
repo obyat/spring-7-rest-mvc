@@ -64,7 +64,7 @@ class BeerControllerIT {
     void testListBeers() {
         List<BeerDTO> dtos = beerController.getAllBeers();
 
-        assertThat(dtos.size()).isEqualTo(5);
+        assertThat(dtos.size()).isEqualTo(2415);
     }
 
 

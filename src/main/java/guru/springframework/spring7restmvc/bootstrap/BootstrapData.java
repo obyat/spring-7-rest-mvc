@@ -5,10 +5,15 @@ import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
+import guru.springframework.spring7restmvc.service.BeerCsvService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +25,18 @@ public class BootstrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
     private final CustomerRepository customerRepository;
+    private final BeerCsvService beerCsvService;
+
+
+    private static BeerStyle getBeerStyleEnum(String beerStyle) {
+        return switch (beerStyle.toLowerCase()) {
+            case String s when s.contains("lager") -> BeerStyle.LAGER;
+            case String s when s.contains("ipa") -> BeerStyle.IPA;
+            case String s when s.contains("stout") -> BeerStyle.STOUT;
+            case String s when s.contains("pilsner") -> BeerStyle.PILSNER;
+            default -> BeerStyle.ALE;
+        };
+    }
 
 
     /**
@@ -30,8 +47,31 @@ public class BootstrapData implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
+        populateCSVBeerDb();
         populateBeerDb();
         populateCustomerDb();
+    }
+
+
+    private void populateCSVBeerDb() throws FileNotFoundException {
+        if (beerRepository.count() < 100) {
+            File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
+            List<Beer> beers = beerCsvService.convertCSV(file)
+                    .stream()
+                    .map(beerCSVRecord -> {
+                        return Beer.builder()
+                                .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(), 50))
+                                .beerStyle(getBeerStyleEnum(beerCSVRecord.getStyle()))
+                                .upc(beerCSVRecord.getId().toString())
+                                .price(new BigDecimal("12.99"))
+                                .quantityOnHand(beerCSVRecord.getCount())
+                                .createdDate(LocalDateTime.now())
+                                .updatedDate(LocalDateTime.now())
+                                .build();
+                    })
+                    .toList();
+            beerRepository.saveAll(beers);
+        }
     }
 
 
@@ -96,7 +136,6 @@ public class BootstrapData implements CommandLineRunner {
                         .build();
 
         beerRepository.saveAll(List.of(beer1, beer2, beer3, beer4, beer5));
-        ;
     }
 
 
