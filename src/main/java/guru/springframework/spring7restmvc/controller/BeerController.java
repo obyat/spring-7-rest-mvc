@@ -2,6 +2,7 @@ package guru.springframework.spring7restmvc.controller;
 
 import guru.springframework.spring7restmvc.constants.ApiPaths;
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.BeerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -44,8 +46,10 @@ public class BeerController {
 
 
     @GetMapping()
-    public List<BeerDTO> getAllBeers() {
-        return this.beerService.listBeers();
+    public List<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName,
+                                     @RequestParam(required = false) BeerStyle beerStyle, @RequestParam(required =
+                    false) boolean showInventory) {
+        return this.beerService.listBeers(beerName, beerStyle, showInventory);
     }
 
 

@@ -4,6 +4,7 @@ import guru.springframework.spring7restmvc.constants.ApiPaths;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +27,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -62,9 +66,9 @@ class BeerControllerIT {
 
     @Test
     void testListBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
 
-        assertThat(dtos.size()).isEqualTo(2415);
+        assertThat(dtos.size()).isEqualTo(2410);
     }
 
 
@@ -75,6 +79,43 @@ class BeerControllerIT {
         BeerDTO dto = beerController.getBeerById(beer.getId());
 
         assertThat(dto.getId()).isEqualTo(beer.getId());
+    }
+
+
+    @Test
+    void testListBeersByName() throws Exception {
+        this.mockMvc.perform(
+                        get(ApiPaths.Beer.ROOT, "IPA")
+                                .queryParam("beerName", "IPA")
+                                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(336)));
+    }
+
+
+    @Test
+    void testListBeersByBeerStyle() throws Exception {
+        this.mockMvc.perform(
+                        get(ApiPaths.Beer.ROOT)
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(571)));
+    }
+
+
+    @Test
+    void testListBeersByBeerNameANDBeerStyle() throws Exception {
+        this.mockMvc.perform(
+                        get(ApiPaths.Beer.ROOT)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(324)));
     }
 
 
@@ -90,7 +131,7 @@ class BeerControllerIT {
     @Test
     void testEmptyBeers() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
 
         assertThat(dtos.size()).isEqualTo(0);
     }
