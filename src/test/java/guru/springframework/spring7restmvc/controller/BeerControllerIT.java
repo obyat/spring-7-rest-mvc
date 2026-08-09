@@ -65,10 +65,26 @@ class BeerControllerIT {
 
 
     @Test
-    void testListBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
+    void testListBeersLimit1000() {
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false, 1, 2410).getContent();
 
-        assertThat(dtos.size()).isEqualTo(2410);
+        assertThat(dtos.size()).isEqualTo(1000);
+    }
+
+
+    @Test
+    void testListBeersByStyleAndNameShowInventoryTruePage2() throws Exception {
+        this.mockMvc.perform(
+                        get(ApiPaths.Beer.ROOT, "IPA")
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .queryParam("showInventoryOnHand", "true")
+                                .queryParam("pageNumber", "2")
+                                .queryParam("pageSize", "76")
+                                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                                .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(76)));
     }
 
 
@@ -90,7 +106,7 @@ class BeerControllerIT {
                                 .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(336)));
+                .andExpect(jsonPath("$.content", hasSize(25)));
     }
 
 
@@ -102,7 +118,7 @@ class BeerControllerIT {
                                 .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(571)));
+                .andExpect(jsonPath("$.content", hasSize(25)));
     }
 
 
@@ -115,7 +131,7 @@ class BeerControllerIT {
                                 .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                                 .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(324)));
+                .andExpect(jsonPath("$.content", hasSize(25)));
     }
 
 
@@ -131,7 +147,7 @@ class BeerControllerIT {
     @Test
     void testEmptyBeers() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false, 1, 25).getContent();
 
         assertThat(dtos.size()).isEqualTo(0);
     }

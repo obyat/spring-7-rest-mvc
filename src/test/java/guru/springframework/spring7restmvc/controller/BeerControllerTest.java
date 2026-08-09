@@ -122,7 +122,7 @@ class BeerControllerTest {
 
     @Test
     void getBeerById() throws Exception {
-        BeerDTO testBeerDTO = beerServiceImpl.listBeers(null, null, false).getFirst();
+        BeerDTO testBeerDTO = beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().getFirst();
 
         when(beerService.getBeerById(testBeerDTO.getId())).thenReturn(Optional.of(testBeerDTO));
 
@@ -139,11 +139,11 @@ class BeerControllerTest {
 
     @Test
     void testDeleteBeer() throws Exception {
-        BeerDTO testBeerDTO = beerServiceImpl.listBeers(null, null, false).getFirst();
+        BeerDTO testBeerDTO = beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().getFirst();
 
         given(beerService.deleteBeerById(testBeerDTO.getId())).willReturn(true);
 
-        assertThat(beerServiceImpl.listBeers(null, null, false).size(), is(5));
+        assertThat(beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().size(), is(5));
 
         // Make the mocked service's deleteById affect the real in-memory impl
         org.mockito.Mockito.doAnswer(
@@ -163,13 +163,13 @@ class BeerControllerTest {
 
         verify(beerService).deleteBeerById(this.beerUUIDCaptor.capture());
         assertThat(this.beerUUIDCaptor.getValue(), is(testBeerDTO.getId()));
-        assertThat(beerServiceImpl.listBeers(null, null, false).size(), is(4));
+        assertThat(beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().size(), is(4));
     }
 
 
     @Test
     void getBeerByIdLastBeer() throws Exception {
-        BeerDTO testBeerDTO = beerServiceImpl.listBeers(null, null, false).getLast();
+        BeerDTO testBeerDTO = beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().getLast();
 
         when(beerService.getBeerById(testBeerDTO.getId())).thenReturn(Optional.of(testBeerDTO));
 
@@ -186,13 +186,14 @@ class BeerControllerTest {
 
     @Test
     void testListBeers() throws Exception {
-        when(beerService.listBeers(null, null, false)).thenReturn(beerServiceImpl.listBeers(null, null, false));
+        when(beerService.listBeers(null, null, false, null, null)).thenReturn(beerServiceImpl.listBeers(null, null,
+                false, 1, null));
 
         mockMvc
                 .perform(get(ApiPaths.Beer.ROOT))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(String.valueOf(MediaType.APPLICATION_JSON)))
-                .andExpect(jsonPath("$.length()", is(5)));
+                .andExpect(jsonPath("$.length()", is(11)));
     }
 
 
@@ -210,7 +211,8 @@ class BeerControllerTest {
     void testCreateBeerNullBeerName() throws Exception {
         BeerDTO beerDTO = BeerDTO.builder().build();
 
-        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers(null, null, false).get(1));
+        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers(null, null, false, 1,
+                25).getContent().get(1));
 
         var result = this.mockMvc
                 .perform(
@@ -228,7 +230,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateBeerBlankName() throws Exception {
-        BeerDTO beerDTO = this.beerServiceImpl.listBeers(null, null, false).getFirst();
+        BeerDTO beerDTO = this.beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().getFirst();
         beerDTO.setBeerName("");
         beerDTO.setBeerName("Updated Beer 2.0");
         beerDTO.setPrice(new BigDecimal("2.0"));

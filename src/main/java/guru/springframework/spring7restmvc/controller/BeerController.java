@@ -7,6 +7,7 @@ import guru.springframework.spring7restmvc.service.BeerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -46,10 +46,12 @@ public class BeerController {
 
 
     @GetMapping()
-    public List<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName,
-                                     @RequestParam(required = false) BeerStyle beerStyle, @RequestParam(required =
-                    false) boolean showInventory) {
-        return this.beerService.listBeers(beerName, beerStyle, showInventory);
+    public Page<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName,
+                                     @RequestParam(required = false) BeerStyle beerStyle,
+                                     @RequestParam(required = false) boolean showInventory,
+                                     @RequestParam(required = false) Integer pageNumber,
+                                     @RequestParam(required = false) Integer pageSize) {
+        return this.beerService.listBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
     }
 
 
