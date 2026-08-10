@@ -47,12 +47,10 @@ class CustomerControllerTest {
 
   CustomerServiceImpl customerServiceImpl;
 
-
   @BeforeEach
   void setUp() {
     this.customerServiceImpl = new CustomerServiceImpl();
   }
-
 
   @Test
   void testCreateCustomer() throws Exception {
@@ -77,12 +75,12 @@ class CustomerControllerTest {
                             .string("Location", ApiPaths.Customer.ROOT + "/" + CustomerDTO.getId().toString()));
   }
 
-
   @Test
   void testUpdateCustomer() throws Exception {
     CustomerDTO CustomerDTO = this.customerServiceImpl.getAllCustomers().getFirst();
 
-    when(this.customerService.getCustomerById(CustomerDTO.getId())).thenReturn(Optional.of(CustomerDTO));
+    when(this.customerService.getCustomerById(CustomerDTO.getId()))
+            .thenReturn(Optional.of(CustomerDTO));
 
     this.mockMvc
             .perform(
@@ -94,7 +92,6 @@ class CustomerControllerTest {
 
     verify(customerService).updateCustomerById(any(UUID.class), any(CustomerDTO.class));
   }
-
 
   @Test
   void testGetCustomerById() throws Exception {
@@ -109,7 +106,6 @@ class CustomerControllerTest {
             .andExpect(jsonPath("$.id", is(CustomerDTO.getId().toString())))
             .andExpect(jsonPath("$.customerName", is(CustomerDTO.getCustomerName())));
   }
-
 
   @Test
   void testDeleteCustomerById() throws Exception {
@@ -138,7 +134,6 @@ class CustomerControllerTest {
     assertThat(uuidCaptor.getValue(), is(CustomerDTO.getId()));
     assertThat(customerServiceImpl.getAllCustomers().size(), is(2));
   }
-
 
   @Test
   void testListCustomers() throws Exception {

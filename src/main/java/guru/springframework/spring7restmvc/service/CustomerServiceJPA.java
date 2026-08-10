@@ -24,8 +24,7 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public List<CustomerDTO> getAllCustomers() {
-        return customerRepository.findAll()
-                .stream()
+        return customerRepository.findAll().stream()
                 .map(customerMapper::customerToCustomerDto)
                 .collect(Collectors.toList());
     }
@@ -34,30 +33,35 @@ public class CustomerServiceJPA implements CustomerService {
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
         return Optional.ofNullable(
-                customerMapper.customerToCustomerDto(
-                        customerRepository
-                                .findById(id)
-                                .orElse(null)));
+                customerMapper.customerToCustomerDto(customerRepository.findById(id).orElse(null)));
     }
 
 
     @Override
     public CustomerDTO saveNewCustomer(CustomerDTO CustomerDTO) {
-        return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(CustomerDTO)));
+        return customerMapper.customerToCustomerDto(
+                customerRepository.save(customerMapper.customerDtoToCustomer(CustomerDTO)));
     }
 
 
     @Override
     public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO CustomerDTO) {
-        AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>(Optional.empty());
+        AtomicReference<Optional<CustomerDTO>> atomicReference =
+                new AtomicReference<>(Optional.empty());
 
-        customerRepository.findById(id).ifPresentOrElse(customer -> {
-            customer.setCustomerName(CustomerDTO.getCustomerName());
-            customer.setCreatedDate(CustomerDTO.getCreatedDate());
-            customer.setEmail(CustomerDTO.getEmail());
-            customer.setLastModifiedDate(CustomerDTO.getLastModifiedDate());
-            atomicReference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(customer))));
-        }, () -> atomicReference.set(Optional.empty()));
+        customerRepository
+                .findById(id)
+                .ifPresentOrElse(
+                        customer -> {
+                            customer.setCustomerName(CustomerDTO.getCustomerName());
+                            customer.setCreatedDate(CustomerDTO.getCreatedDate());
+                            customer.setEmail(CustomerDTO.getEmail());
+                            customer.setLastModifiedDate(CustomerDTO.getLastModifiedDate());
+                            atomicReference.set(
+                                    Optional.of(
+                                            customerMapper.customerToCustomerDto(customerRepository.save(customer))));
+                        },
+                        () -> atomicReference.set(Optional.empty()));
         return atomicReference.get();
     }
 

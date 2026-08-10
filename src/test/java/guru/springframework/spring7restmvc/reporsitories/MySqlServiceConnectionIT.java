@@ -22,24 +22,25 @@ import static org.hamcrest.Matchers.greaterThan;
 @ActiveProfiles("localmysql")
 public class MySqlServiceConnectionIT {
 
-    @Container
-    @ServiceConnection
-    static MySQLContainer mySQLContainer = new MySQLContainer("mysql:9");
-    @Autowired
-    DataSource dataSource;
+  @Container
+  @ServiceConnection
+  static MySQLContainer mySQLContainer = new MySQLContainer("mysql:9");
 
-    @Autowired
-    BeerRepository beerRepository;
+  @Autowired
+  DataSource dataSource;
+
+  @Autowired
+  BeerRepository beerRepository;
 
 
-    @Test
-    void testListBeers() {
-        System.out.println("I'm here");
-        System.out.println("DataSource: " + dataSource);
-        System.out.println("BeerRepository: " + beerRepository);
+  @Test
+  void testListBeers() {
+    System.out.println("I'm here");
+    System.out.println("DataSource: " + dataSource);
+    System.out.println("BeerRepository: " + beerRepository);
 
-        List<Beer> beers = beerRepository.findAll();
+    List<Beer> beers = beerRepository.findAll();
 
-        assertThat(beers.size(), greaterThan(0));
-    }
+    assertThat(beers.size(), greaterThan(0));
+  }
 }

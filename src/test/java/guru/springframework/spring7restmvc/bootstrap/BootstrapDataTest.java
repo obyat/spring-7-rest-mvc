@@ -1,6 +1,5 @@
 package guru.springframework.spring7restmvc.bootstrap;
 
-
 import guru.springframework.spring7restmvc.reporsitories.BeerRepository;
 import guru.springframework.spring7restmvc.reporsitories.CustomerRepository;
 import guru.springframework.spring7restmvc.service.BeerCsvService;
@@ -18,33 +17,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(BeerCsvServiceImpl.class)
 class BootstrapDataTest {
 
-    @Autowired
-    BeerRepository beerRepository;
+  @Autowired
+  BeerRepository beerRepository;
 
-    @Autowired
-    CustomerRepository customerRepository;
+  @Autowired
+  CustomerRepository customerRepository;
 
-    @Autowired
-    BeerCsvService beerCsvService;
+  @Autowired
+  BeerCsvService beerCsvService;
 
-    BootstrapData bootstrapData;
-
-
-    @BeforeEach
-    void setUp() {
-        bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
-    }
+  BootstrapData bootstrapData;
 
 
-    @Test
-    void Testrun() throws Exception {
-        bootstrapData.run(null);
+  @BeforeEach
+  void setUp() {
+    bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
+  }
 
-        assertThat(beerRepository.count()).isEqualTo(2410L);
-        assertThat(customerRepository.count()).isEqualTo(3);
-    }
+
+  @Test
+  void Testrun() throws Exception {
+    bootstrapData.run(null);
+
+    assertThat(beerRepository.count()).isEqualTo(2410L);
+    assertThat(customerRepository.count()).isEqualTo(3);
+  }
 }
-
-
-
-

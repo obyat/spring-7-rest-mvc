@@ -47,8 +47,10 @@ class CustomerControllerIT {
     @Test
     void testGetByIdNotFound() {
 
-        assertThrows(NotFoundException.class, () -> {
-            customerController.getCustomerById(UUID.randomUUID());
+        assertThrows(
+                NotFoundException.class,
+                () -> {
+                    customerController.getCustomerById(UUID.randomUUID());
         });
     }
 
@@ -66,7 +68,6 @@ class CustomerControllerIT {
         customerRepository.deleteAll();
 
         assertThat(customerController.getAllCustomers().size(), equalTo(0));
-
     }
 
 
@@ -88,15 +89,18 @@ class CustomerControllerIT {
 
         ResponseEntity<CustomerDTO> responseEntity = customerController.handlePost(customerDTO);
 
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(201));
+        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.valueOf(201));
         AssertionsForClassTypes.assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 
-        String[] locationUUID = Objects.requireNonNull(responseEntity.getHeaders().getLocation()).getPath().split("/");
+        String[] locationUUID =
+                Objects.requireNonNull(responseEntity.getHeaders().getLocation()).getPath().split("/");
         UUID savedUUID = UUID.fromString(locationUUID[4]);
 
         Customer customer = customerRepository.findById(savedUUID).get();
 
-        AssertionsForClassTypes.assertThat(customer.getCustomerName()).isEqualTo(customerDTO.getCustomerName());
+        AssertionsForClassTypes.assertThat(customer.getCustomerName())
+                .isEqualTo(customerDTO.getCustomerName());
         AssertionsForClassTypes.assertThat(customer.getId()).isEqualTo(savedUUID);
     }
 
@@ -111,12 +115,12 @@ class CustomerControllerIT {
 
         AssertionsForClassTypes.assertThat(customerDTO.getCustomerName()).isNotEqualTo(customerName);
 
-
         customerDTO.setCustomerName(customerName);
 
-        ResponseEntity<CustomerDTO> responseEntity = customerController.updateCustomerById(customer.getId(),
-                customerDTO);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
+        ResponseEntity<CustomerDTO> responseEntity =
+                customerController.updateCustomerById(customer.getId(), customerDTO);
+        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.valueOf(204));
 
         Customer updatedCustomer = customerRepository.findById(customer.getId()).get();
         AssertionsForClassTypes.assertThat(updatedCustomer.getCustomerName()).isEqualTo(customerName);
@@ -125,8 +129,11 @@ class CustomerControllerIT {
 
     @Test
     void testUpdateNoteFound() {
-        assertThrows((NotFoundException.class), () -> customerController.updateCustomerById(UUID.randomUUID(),
-                CustomerDTO.builder().build()));
+        assertThrows(
+                (NotFoundException.class),
+                () ->
+                        customerController.updateCustomerById(
+                                UUID.randomUUID(), CustomerDTO.builder().build()));
     }
 
 
@@ -136,12 +143,12 @@ class CustomerControllerIT {
     void deleteByIdNotFound() {
         Customer customer = customerRepository.findAll().get(0);
 
-        ResponseEntity<CustomerDTO> responseEntity = customerController.deleteCustomerById(customer.getId());
+        ResponseEntity<CustomerDTO> responseEntity =
+                customerController.deleteCustomerById(customer.getId());
         Customer foundCustomer = customerRepository.findById(customer.getId()).orElse(null);
 
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
+        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode())
+                .isEqualTo(HttpStatus.valueOf(204));
         AssertionsForClassTypes.assertThat(foundCustomer).isNull();
     }
-
-
 }

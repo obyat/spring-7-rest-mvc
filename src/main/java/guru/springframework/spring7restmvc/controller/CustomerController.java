@@ -27,58 +27,58 @@ import java.util.UUID;
 @RequestMapping(ApiPaths.Customer.ROOT)
 public class CustomerController {
 
-    private final CustomerService customerService;
+  private final CustomerService customerService;
 
 
-    @GetMapping()
-    public List<CustomerDTO> getAllCustomers() {
-        return customerService.getAllCustomers();
+  @GetMapping()
+  public List<CustomerDTO> getAllCustomers() {
+    return customerService.getAllCustomers();
+  }
+
+
+  @PostMapping
+  public ResponseEntity<CustomerDTO> handlePost(@RequestBody CustomerDTO CustomerDTO) {
+    CustomerDTO savedCustomerDTO = customerService.saveNewCustomer(CustomerDTO);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(
+            "Location",
+            ApiPaths.Customer.CUSTOMER_WITH_ID.replace(
+                    "{customerId}", savedCustomerDTO.getId().toString()));
+
+    return new ResponseEntity<>(savedCustomerDTO, headers, HttpStatus.CREATED);
+  }
+
+
+  @GetMapping(ApiPaths.Customer.BY_ID)
+  public CustomerDTO getCustomerById(@PathVariable("customerId") UUID id) {
+    log.debug("Getting customer by id in controller: {}", id);
+
+    return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
+  }
+
+
+  @PutMapping(ApiPaths.Customer.BY_ID)
+  public ResponseEntity<CustomerDTO> updateCustomerById(
+          @PathVariable UUID customerId, @RequestBody CustomerDTO CustomerDTO) {
+
+    if (customerService.getCustomerById(customerId).isEmpty()) {
+      throw new NotFoundException();
     }
 
+    log.debug("Updating customer by id in controller: {}", customerId);
+    customerService.updateCustomerById(customerId, CustomerDTO);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 
-    @PostMapping
-    public ResponseEntity<CustomerDTO> handlePost(@RequestBody CustomerDTO CustomerDTO) {
-        CustomerDTO savedCustomerDTO = customerService.saveNewCustomer(CustomerDTO);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(
-                "Location",
-                ApiPaths.Customer.CUSTOMER_WITH_ID.replace(
-                        "{customerId}", savedCustomerDTO.getId().toString()));
-
-        return new ResponseEntity<>(savedCustomerDTO, headers, HttpStatus.CREATED);
+  @DeleteMapping(ApiPaths.Customer.BY_ID)
+  public ResponseEntity<CustomerDTO> deleteCustomerById(@PathVariable UUID customerId) {
+    Boolean deleted = customerService.deleteCustomerById(customerId);
+    if (!Boolean.TRUE.equals(deleted)) {
+      throw new NotFoundException();
     }
-
-
-    @GetMapping(ApiPaths.Customer.BY_ID)
-    public CustomerDTO getCustomerById(@PathVariable("customerId") UUID id) {
-        log.debug("Getting customer by id in controller: {}", id);
-
-        return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
-    }
-
-
-    @PutMapping(ApiPaths.Customer.BY_ID)
-    public ResponseEntity<CustomerDTO> updateCustomerById(
-            @PathVariable UUID customerId, @RequestBody CustomerDTO CustomerDTO) {
-
-        if (customerService.getCustomerById(customerId).isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        log.debug("Updating customer by id in controller: {}", customerId);
-        customerService.updateCustomerById(customerId, CustomerDTO);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-
-    @DeleteMapping(ApiPaths.Customer.BY_ID)
-    public ResponseEntity<CustomerDTO> deleteCustomerById(@PathVariable UUID customerId) {
-        Boolean deleted = customerService.deleteCustomerById(customerId);
-        if (!Boolean.TRUE.equals(deleted)) {
-            throw new NotFoundException();
-        }
-        log.debug("Deleting customer by id in controller: {}", customerId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    log.debug("Deleting customer by id in controller: {}", customerId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 }

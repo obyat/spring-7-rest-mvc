@@ -10,14 +10,18 @@ import java.util.UUID;
 
 public interface BeerService {
 
-    Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer PageNumber,
-                            Integer pageSize);
+  Page<BeerDTO> listBeers(
+          String beerName,
+          BeerStyle beerStyle,
+          boolean showInventory,
+          Integer PageNumber,
+          Integer pageSize);
 
-    Optional<BeerDTO> getBeerById(UUID id);
+  Optional<BeerDTO> getBeerById(UUID id);
 
-    BeerDTO saveNewBeer(BeerDTO beerDTO);
+  BeerDTO saveNewBeer(BeerDTO beerDTO);
 
-    Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO);
+  Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO);
 
-    Boolean deleteBeerById(UUID beerId);
+  Boolean deleteBeerById(UUID beerId);
 }

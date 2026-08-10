@@ -4,11 +4,10 @@ import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import org.mapstruct.Mapper;
 
-
 @Mapper
 public interface BeerMapper {
 
-    Beer beerDtoToBeer(BeerDTO beerDTO);
+  Beer beerDtoToBeer(BeerDTO beerDTO);
 
-    BeerDTO beerToBeerDto(Beer beer);
+  BeerDTO beerToBeerDto(Beer beer);
 }

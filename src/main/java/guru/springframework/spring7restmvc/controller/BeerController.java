@@ -29,59 +29,60 @@ import java.util.UUID;
 @RestController
 @RequestMapping(ApiPaths.Beer.ROOT)
 public class BeerController {
-    private final BeerService beerService;
+  private final BeerService beerService;
 
 
-    @PostMapping
-    public ResponseEntity<BeerDTO> handlePost(@Valid @RequestBody BeerDTO beerDTO) {
-        BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
+  @PostMapping
+  public ResponseEntity<BeerDTO> handlePost(@Valid @RequestBody BeerDTO beerDTO) {
+    BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(
-                "Location",
-                ApiPaths.Beer.BEER_WITH_ID.replace("{beerId}", savedBeerDTO.getId().toString()));
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(
+            "Location",
+            ApiPaths.Beer.BEER_WITH_ID.replace("{beerId}", savedBeerDTO.getId().toString()));
 
-        return new ResponseEntity<>(savedBeerDTO, headers, HttpStatus.CREATED);
+    return new ResponseEntity<>(savedBeerDTO, headers, HttpStatus.CREATED);
+  }
+
+
+  @GetMapping()
+  public Page<BeerDTO> getAllBeers(
+          @RequestParam(required = false) String beerName,
+          @RequestParam(required = false) BeerStyle beerStyle,
+          @RequestParam(required = false) boolean showInventory,
+          @RequestParam(required = false) Integer pageNumber,
+          @RequestParam(required = false) Integer pageSize) {
+    return this.beerService.listBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
+  }
+
+
+  @GetMapping(value = ApiPaths.Beer.BY_ID)
+  public BeerDTO getBeerById(@PathVariable("beerId") UUID id) {
+    log.debug("Getting beer by id in BeerController: {}", id);
+    return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
+  }
+
+
+  @PutMapping(ApiPaths.Beer.BY_ID)
+  public ResponseEntity<BeerDTO> updateById(
+          @PathVariable UUID beerId, @Valid @RequestBody BeerDTO beerDTO) {
+    if (beerService.getBeerById(beerId).isEmpty()) {
+      throw new NotFoundException();
     }
 
+    log.debug("Updating beer by id in BeerController: {}", beerId);
+    beerService.updateBeerById(beerId, beerDTO);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 
-    @GetMapping()
-    public Page<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName,
-                                     @RequestParam(required = false) BeerStyle beerStyle,
-                                     @RequestParam(required = false) boolean showInventory,
-                                     @RequestParam(required = false) Integer pageNumber,
-                                     @RequestParam(required = false) Integer pageSize) {
-        return this.beerService.listBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
+
+  @DeleteMapping(ApiPaths.Beer.BY_ID)
+  public ResponseEntity<BeerDTO> deleteById(@PathVariable UUID beerId) {
+    Boolean deleted = beerService.deleteBeerById(beerId);
+    if (!Boolean.TRUE.equals(deleted)) {
+      throw new NotFoundException();
     }
-
-
-    @GetMapping(value = ApiPaths.Beer.BY_ID)
-    public BeerDTO getBeerById(@PathVariable("beerId") UUID id) {
-        log.debug("Getting beer by id in BeerController: {}", id);
-        return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
-    }
-
-
-    @PutMapping(ApiPaths.Beer.BY_ID)
-    public ResponseEntity<BeerDTO> updateById(
-            @PathVariable UUID beerId, @Valid @RequestBody BeerDTO beerDTO) {
-        if (beerService.getBeerById(beerId).isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        log.debug("Updating beer by id in BeerController: {}", beerId);
-        beerService.updateBeerById(beerId, beerDTO);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-
-    @DeleteMapping(ApiPaths.Beer.BY_ID)
-    public ResponseEntity<BeerDTO> deleteById(@PathVariable UUID beerId) {
-        Boolean deleted = beerService.deleteBeerById(beerId);
-        if (!Boolean.TRUE.equals(deleted)) {
-            throw new NotFoundException();
-        }
-        log.debug("Deleting beer by id in BeerController: {}", beerId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    log.debug("Deleting beer by id in BeerController: {}", beerId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 }

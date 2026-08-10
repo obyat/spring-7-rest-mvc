@@ -35,32 +35,38 @@ import java.util.UUID;
 @Entity
 public class Beer {
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    @UuidGenerator
-    private UUID id;
-    @Version
-    private Integer version;
-    @NotNull
-    @NotEmpty
-    @Size(max = 50)
-    // Size constraint validation is good because it checks before @Column writes to database with a column size
-    @Column(length = 50)
-    private String beerName;
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.SMALLINT)
-    private BeerStyle beerStyle;
-    @NotNull
-    @NotEmpty
-    @Size(max = 255)
-    private String upc;
-    private Integer quantityOnHand;
-    @NotNull
-    private BigDecimal price;
-    @CreationTimestamp
-    private LocalDateTime createdDate;
-    @UpdateTimestamp
-    private LocalDateTime updatedDate;
+  @Id
+  @GeneratedValue(generator = "UUID")
+  @JdbcTypeCode(SqlTypes.CHAR)
+  @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+  @UuidGenerator
+  private UUID id;
+
+  @Version
+  private Integer version;
+
+  @NotNull
+  @NotEmpty
+  @Size(max = 50)
+  // Size constraint validation is good because it checks before @Column writes to database with a
+  // column size
+  @Column(length = 50)
+  private String beerName;
+
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.SMALLINT)
+  private BeerStyle beerStyle;
+
+  @NotNull
+  @NotEmpty
+  @Size(max = 255)
+  private String upc;
+
+  private Integer quantityOnHand;
+  @NotNull
+  private BigDecimal price;
+  @CreationTimestamp
+  private LocalDateTime createdDate;
+  @UpdateTimestamp
+  private LocalDateTime updatedDate;
 }
