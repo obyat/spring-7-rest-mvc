@@ -27,30 +27,30 @@ import java.util.UUID;
 @Entity
 public class BeerOrder {
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    @UuidGenerator
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "UUID")
+  @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+  @UuidGenerator
+  private UUID id;
 
-    @Version
-    private Long version;
+  @Version
+  private Long version;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp createdDate;
+  @CreationTimestamp
+  @Column(updatable = false)
+  private Timestamp createdDate;
 
-    @UpdateTimestamp
-    private Timestamp lastModifiedDate;
+  @UpdateTimestamp
+  private Timestamp lastModifiedDate;
 
-    private Integer orderQuantity = 0;
-    private Integer quantityAllocated = 0;
+  private Integer orderQuantity = 0;
+  private Integer quantityAllocated = 0;
 
-    @ManyToOne
-    private Customer customer;
+  @ManyToOne
+  private Customer customer;
 
 
-    public boolean isNew() {
-        return this.id == null;
-    }
+  public boolean isNew() {
+    return this.id == null;
+  }
 }

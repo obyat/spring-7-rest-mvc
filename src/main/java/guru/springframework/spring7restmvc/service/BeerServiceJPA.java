@@ -29,7 +29,6 @@ public class BeerServiceJPA implements BeerService {
   private final BeerRepository beerRepository;
   private final BeerMapper beerMapper;
 
-
   /**
    * Builds a {@link PageRequest} using the provided page number and page size.
    *
@@ -41,7 +40,7 @@ public class BeerServiceJPA implements BeerService {
    * maximum of 1000.
    *
    * @param pageNumber the requested page number, starting at 1
-   * @param pageSize   the requested number of items per page
+   * @param pageSize the requested number of items per page
    * @return a {@link PageRequest} configured with the validated page number and page size
    */
   private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
@@ -53,7 +52,6 @@ public class BeerServiceJPA implements BeerService {
 
     return PageRequest.of(pageNumber, pageSize, sort);
   }
-
 
   @Override
   public Page<BeerDTO> listBeers(
@@ -85,35 +83,29 @@ public class BeerServiceJPA implements BeerService {
     return beerPage.map(beerMapper::beerToBeerDto);
   }
 
-
   private Page<Beer> listBeersByNameAndStyle(
           String beerName, BeerStyle beerStyle, Pageable pageable) {
     return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle(
             "%" + beerName + "%", beerStyle, pageable);
   }
 
-
   private Page<Beer> listBeersByStyle(BeerStyle beerStyle, Pageable pageable) {
     return beerRepository.findAllByBeerStyle(beerStyle, pageable);
   }
 
-
   private Page<Beer> listBeersByName(String beerName, Pageable pageable) {
     return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%", pageable);
   }
-
 
   @Override
   public Optional<BeerDTO> getBeerById(UUID id) {
     return Optional.ofNullable(beerMapper.beerToBeerDto(beerRepository.findById(id).orElse(null)));
   }
 
-
   @Override
   public BeerDTO saveNewBeer(BeerDTO beerDTO) {
     return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beerDTO)));
   }
-
 
   @Override
   public Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO) {
@@ -135,7 +127,6 @@ public class BeerServiceJPA implements BeerService {
 
     return updatedBeer.get();
   }
-
 
   @Override
   public Boolean deleteBeerById(UUID beerId) {

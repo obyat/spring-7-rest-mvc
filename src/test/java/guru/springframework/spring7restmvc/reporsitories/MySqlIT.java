@@ -30,14 +30,12 @@ public class MySqlIT {
   @Autowired
   BeerRepository beerRepository;
 
-
   @DynamicPropertySource
   static void mySqlProperties(DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.username", mySQLContainer::getUsername);
     registry.add("spring.datasource.password", mySQLContainer::getPassword);
     registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
   }
-
 
   @Test
   void testListBeers() {

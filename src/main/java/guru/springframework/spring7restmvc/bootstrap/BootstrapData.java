@@ -27,7 +27,6 @@ public class BootstrapData implements CommandLineRunner {
   private final CustomerRepository customerRepository;
   private final BeerCsvService beerCsvService;
 
-
   private static BeerStyle getBeerStyleEnum(String beerStyle) {
     return switch (beerStyle.toLowerCase()) {
       case String s when s.contains("lager") -> BeerStyle.LAGER;
@@ -37,7 +36,6 @@ public class BootstrapData implements CommandLineRunner {
       default -> BeerStyle.ALE;
     };
   }
-
 
   /**
    * Callback used to run the bean.
@@ -51,7 +49,6 @@ public class BootstrapData implements CommandLineRunner {
     populateBeerDb();
     populateCustomerDb();
   }
-
 
   private void populateCSVBeerDb() throws FileNotFoundException {
     if (beerRepository.count() < 100) {
@@ -74,7 +71,6 @@ public class BootstrapData implements CommandLineRunner {
       beerRepository.saveAll(beers);
     }
   }
-
 
   private void populateBeerDb() {
     if (beerRepository.count() > 0) {
@@ -138,7 +134,6 @@ public class BootstrapData implements CommandLineRunner {
 
     beerRepository.saveAll(List.of(beer1, beer2, beer3, beer4, beer5));
   }
-
 
   private void populateCustomerDb() {
     if (customerRepository.count() > 0) {

@@ -57,12 +57,10 @@ class BeerControllerIT {
   @Autowired
   ObjectMapper objectMapper;
 
-
   @BeforeEach
   void setup() {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
   }
-
 
   @Test
   void testListBeersLimit1000() {
@@ -70,7 +68,6 @@ class BeerControllerIT {
 
     assertThat(dtos.size()).isEqualTo(1000);
   }
-
 
   @Test
   void testListBeersByStyleAndNameShowInventoryTruePage2() throws Exception {
@@ -88,7 +85,6 @@ class BeerControllerIT {
             .andExpect(jsonPath("$.content", hasSize(76)));
   }
 
-
   @Test
   void testGetBeerById() {
     Beer beer = beerRepository.findAll().get(0);
@@ -97,7 +93,6 @@ class BeerControllerIT {
 
     assertThat(dto.getId()).isEqualTo(beer.getId());
   }
-
 
   @Test
   void testListBeersByName() throws Exception {
@@ -111,7 +106,6 @@ class BeerControllerIT {
             .andExpect(jsonPath("$.content", hasSize(25)));
   }
 
-
   @Test
   void testListBeersByBeerStyle() throws Exception {
     this.mockMvc
@@ -123,7 +117,6 @@ class BeerControllerIT {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content", hasSize(25)));
   }
-
 
   @Test
   void testListBeersByBeerNameANDBeerStyle() throws Exception {
@@ -138,7 +131,6 @@ class BeerControllerIT {
             .andExpect(jsonPath("$.content", hasSize(25)));
   }
 
-
   @Test
   void testBeerIdNotFound() {
     assertThrows(
@@ -148,7 +140,6 @@ class BeerControllerIT {
         });
   }
 
-
   @Transactional // rolls back db to original undeleted state
   @Test
   void testEmptyBeers() {
@@ -157,7 +148,6 @@ class BeerControllerIT {
 
     assertThat(dtos.size()).isEqualTo(0);
   }
-
 
   @Transactional
   @Rollback
@@ -180,7 +170,6 @@ class BeerControllerIT {
     assertThat(beer.getId()).isEqualTo(savedUUID);
   }
 
-
   @Test
   void testUpdateExistingBeer() {
     Beer beer = beerRepository.findAll().get(0);
@@ -199,7 +188,6 @@ class BeerControllerIT {
     Beer updatedBeer = beerRepository.findById(beer.getId()).get();
     assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
   }
-
 
   @Test
   void testUpdateExistingBeerExistingName() throws Exception {
@@ -220,14 +208,12 @@ class BeerControllerIT {
             .andExpect(status().isBadRequest());
   }
 
-
   @Test
   void testUpdateNoteFound() {
     assertThrows(
             (NotFoundException.class),
             () -> beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build()));
   }
-
 
   @Transactional
   @Rollback
@@ -241,7 +227,6 @@ class BeerControllerIT {
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
     assertThat(foundBeer).isNull();
   }
-
 
   @Transactional
   @Rollback

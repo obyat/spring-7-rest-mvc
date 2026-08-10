@@ -26,7 +26,6 @@ class BeerRepositoryTest {
   @Autowired
   BeerRepository beerRepository;
 
-
   @Test
   void testSaveBeer() {
     Beer beer =
@@ -44,7 +43,6 @@ class BeerRepositoryTest {
     assertThat(beer.getId(), notNullValue());
     assertThat(beer.getBeerName(), equalTo("Test Beer"));
   }
-
 
   @Test
   void testSaveBeerTooLong() {
@@ -64,13 +62,11 @@ class BeerRepositoryTest {
         });
   }
 
-
   @Test
   void testGetBeerListByName() {
     List<Beer> beers = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%", null).getContent();
     assertThat(beers, hasSize(336));
   }
-
 
   @Test
   void testGetBeerListByStyle() {

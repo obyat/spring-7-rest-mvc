@@ -32,7 +32,6 @@ public class MySqlServiceConnectionIT {
   @Autowired
   BeerRepository beerRepository;
 
-
   @Test
   void testListBeers() {
     System.out.println("I'm here");

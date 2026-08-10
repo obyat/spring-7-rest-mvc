@@ -57,12 +57,10 @@ class BeerControllerTest {
   @Captor
   ArgumentCaptor<UUID> beerUUIDCaptor;
 
-
   @BeforeEach
   void setUp() {
     this.beerServiceImpl = new BeerServiceImpl();
   }
-
 
   @Test
   void testCreateBeer() throws Exception {
@@ -96,7 +94,6 @@ class BeerControllerTest {
             .andExpect(header().exists("Location"));
   }
 
-
   @Test
   void testUpdateBeer() throws Exception {
     UUID beerId = UUID.randomUUID();
@@ -120,7 +117,6 @@ class BeerControllerTest {
             .andExpect(status().isNoContent());
   }
 
-
   @Test
   void getBeerById() throws Exception {
     BeerDTO testBeerDTO =
@@ -137,7 +133,6 @@ class BeerControllerTest {
             .andExpect(jsonPath("$.id", is(testBeerDTO.getId().toString())))
             .andExpect(jsonPath("$.beerName", equalTo("Arctic Pilsner")));
   }
-
 
   @Test
   void testDeleteBeer() throws Exception {
@@ -169,7 +164,6 @@ class BeerControllerTest {
     assertThat(beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().size(), is(4));
   }
 
-
   @Test
   void getBeerByIdLastBeer() throws Exception {
     BeerDTO testBeerDTO =
@@ -187,7 +181,6 @@ class BeerControllerTest {
             .andExpect(jsonPath("$.beerName", is(testBeerDTO.getBeerName())));
   }
 
-
   @Test
   void testListBeers() throws Exception {
     when(beerService.listBeers(null, null, false, null, null))
@@ -200,7 +193,6 @@ class BeerControllerTest {
             .andExpect(jsonPath("$.length()", is(11)));
   }
 
-
   @Test
   void getBeerNotFound() throws Exception {
 
@@ -209,7 +201,6 @@ class BeerControllerTest {
             .perform(get(ApiPaths.Beer.BEER_WITH_ID, UUID.randomUUID()))
             .andExpect(status().isNotFound());
   }
-
 
   @Test
   void testCreateBeerNullBeerName() throws Exception {
@@ -231,7 +222,6 @@ class BeerControllerTest {
 
     System.out.println(result.getResponse().getContentAsString());
   }
-
 
   @Test
   void testUpdateBeerBlankName() throws Exception {

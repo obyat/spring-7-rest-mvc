@@ -5,9 +5,8 @@ public final class ApiPaths {
   public static final String API_V1 = "/api/v1";
 
 
-  private ApiPaths() {
-  }
-
+    private ApiPaths() {
+    }
 
   public static final class Customer {
     public static final String ROOT = API_V1 + "/customer";
@@ -15,10 +14,9 @@ public final class ApiPaths {
     public static final String CUSTOMER_WITH_ID = ROOT + BY_ID;
 
 
-    private Customer() {
-    }
+      private Customer() {
+      }
   }
-
 
   public static final class Beer {
     public static final String ROOT = API_V1 + "/beer";
@@ -26,7 +24,7 @@ public final class ApiPaths {
     public static final String BEER_WITH_ID = ROOT + BY_ID;
 
 
-    private Beer() {
-    }
+      private Beer() {
+      }
   }
 }

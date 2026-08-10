@@ -31,7 +31,6 @@ import java.util.UUID;
 public class BeerController {
   private final BeerService beerService;
 
-
   @PostMapping
   public ResponseEntity<BeerDTO> handlePost(@Valid @RequestBody BeerDTO beerDTO) {
     BeerDTO savedBeerDTO = beerService.saveNewBeer(beerDTO);
@@ -44,7 +43,6 @@ public class BeerController {
     return new ResponseEntity<>(savedBeerDTO, headers, HttpStatus.CREATED);
   }
 
-
   @GetMapping()
   public Page<BeerDTO> getAllBeers(
           @RequestParam(required = false) String beerName,
@@ -55,13 +53,11 @@ public class BeerController {
     return this.beerService.listBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
   }
 
-
   @GetMapping(value = ApiPaths.Beer.BY_ID)
   public BeerDTO getBeerById(@PathVariable("beerId") UUID id) {
     log.debug("Getting beer by id in BeerController: {}", id);
     return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
   }
-
 
   @PutMapping(ApiPaths.Beer.BY_ID)
   public ResponseEntity<BeerDTO> updateById(
@@ -74,7 +70,6 @@ public class BeerController {
     beerService.updateBeerById(beerId, beerDTO);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
-
 
   @DeleteMapping(ApiPaths.Beer.BY_ID)
   public ResponseEntity<BeerDTO> deleteById(@PathVariable UUID beerId) {

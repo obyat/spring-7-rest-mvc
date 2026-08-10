@@ -24,7 +24,6 @@ public class BeerServiceImpl implements BeerService {
 
   private final Map<UUID, BeerDTO> beerMap;
 
-
   public BeerServiceImpl() {
     this.beerMap = new HashMap<>();
     BeerDTO beerDTO1 =
@@ -94,7 +93,6 @@ public class BeerServiceImpl implements BeerService {
     beerMap.put(beerDTO5.getId(), beerDTO5);
   }
 
-
   @Override
   public Page<BeerDTO> listBeers(
           String beerName,
@@ -109,14 +107,12 @@ public class BeerServiceImpl implements BeerService {
     return new PageImpl<>(sortedBeerList);
   }
 
-
   @Override
   public Optional<BeerDTO> getBeerById(UUID id) {
     log.debug("get BeerService by Id in BeerServiceImpl: {}", id.toString());
 
     return Optional.of(this.beerMap.get(id));
   }
-
 
   @Override
   public BeerDTO saveNewBeer(BeerDTO beerDTO) {
@@ -137,7 +133,6 @@ public class BeerServiceImpl implements BeerService {
     return savedBeerDTO;
   }
 
-
   @Override
   public Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO) {
     BeerDTO existingBeerDTO = this.beerMap.get(id);
@@ -151,7 +146,6 @@ public class BeerServiceImpl implements BeerService {
     this.beerMap.put(id, existingBeerDTO);
     return Optional.of(existingBeerDTO);
   }
-
 
   @Override
   public Boolean deleteBeerById(UUID beerId) {

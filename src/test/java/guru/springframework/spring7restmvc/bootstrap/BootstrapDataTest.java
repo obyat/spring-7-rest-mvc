@@ -28,12 +28,10 @@ class BootstrapDataTest {
 
   BootstrapData bootstrapData;
 
-
   @BeforeEach
   void setUp() {
     bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
   }
-
 
   @Test
   void Testrun() throws Exception {

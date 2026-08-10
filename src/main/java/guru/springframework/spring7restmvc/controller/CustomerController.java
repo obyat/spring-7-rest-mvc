@@ -29,12 +29,10 @@ public class CustomerController {
 
   private final CustomerService customerService;
 
-
   @GetMapping()
   public List<CustomerDTO> getAllCustomers() {
     return customerService.getAllCustomers();
   }
-
 
   @PostMapping
   public ResponseEntity<CustomerDTO> handlePost(@RequestBody CustomerDTO CustomerDTO) {
@@ -49,14 +47,12 @@ public class CustomerController {
     return new ResponseEntity<>(savedCustomerDTO, headers, HttpStatus.CREATED);
   }
 
-
   @GetMapping(ApiPaths.Customer.BY_ID)
   public CustomerDTO getCustomerById(@PathVariable("customerId") UUID id) {
     log.debug("Getting customer by id in controller: {}", id);
 
     return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
   }
-
 
   @PutMapping(ApiPaths.Customer.BY_ID)
   public ResponseEntity<CustomerDTO> updateCustomerById(
@@ -70,7 +66,6 @@ public class CustomerController {
     customerService.updateCustomerById(customerId, CustomerDTO);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
-
 
   @DeleteMapping(ApiPaths.Customer.BY_ID)
   public ResponseEntity<CustomerDTO> deleteCustomerById(@PathVariable UUID customerId) {
