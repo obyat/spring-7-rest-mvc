@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -25,33 +26,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-public class BeerOrderLine {
+public class BeerOrderShipment {
 
-  @Id
-  @GeneratedValue(generator = "UUID")
-  @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-  @UuidGenerator
-  private UUID id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @UuidGenerator
+    private UUID id;
 
-  @Version
-  private Long version;
+    @Version
+    private Long version;
 
-  @CreationTimestamp
-  @Column(updatable = false)
-  private Timestamp createdDate;
+    @OneToOne
+    private BeerOrder beerOrder;
 
-  @UpdateTimestamp
-  private Timestamp lastModifiedDate;
+    private String trackingNumber;
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdDate;
+    @UpdateTimestamp
+    private Timestamp lastModifiedDate;
 
-  private String customerRef;
 
-  @ManyToOne
-  private BeerOrder beerOrder;
-
-  @ManyToOne
-  private Beer beer;
-
-  public boolean isNew() {
-    return this.id == null;
-  }
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
