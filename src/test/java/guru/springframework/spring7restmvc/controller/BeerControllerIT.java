@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tools.jackson.databind.ObjectMapper;
@@ -233,5 +235,35 @@ class BeerControllerIT {
   @Test
   void testDeleteByIDNotFound() {
     assertThrows(NotFoundException.class, () -> beerController.deleteById(UUID.randomUUID()));
+  }
+
+
+  @Test
+  void testUpdateBeerBadVersion() throws Exception {
+    Beer beer = beerRepository.findAll().get(0);
+    BeerDTO beerDTO = beerMapper.beerToBeerDto(beer);
+
+    beerDTO.setBeerName("Updated V1");
+
+    MvcResult result = this.mockMvc.perform(put(ApiPaths.Beer.BEER_WITH_ID, beer.getId(), beer.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(this.objectMapper.writeValueAsString(beerDTO)))
+            .andExpect(status().isNoContent())
+            .andReturn();
+
+    System.out.println(result.getResponse().getContentAsString());
+
+// Test to make sure optimistic locking is working by trying to update the same beer with a different version
+//    beerDTO.setBeerName("Updated V2");
+//
+//    MvcResult result2 = this.mockMvc.perform(put(ApiPaths.Beer.BEER_WITH_ID, beer.getId(), beer.getId())
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .accept(MediaType.APPLICATION_JSON)
+//                    .content(this.objectMapper.writeValueAsString(beerDTO)))
+//            .andExpect(status().isNoContent())
+//            .andReturn();
+//
+//    System.out.println(result2.getResponse().getStatus());
   }
 }

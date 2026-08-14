@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service
@@ -109,23 +108,30 @@ public class BeerServiceJPA implements BeerService {
 
   @Override
   public Optional<BeerDTO> updateBeerById(UUID id, BeerDTO beerDTO) {
-    AtomicReference<Optional<BeerDTO>> updatedBeer = new AtomicReference<>();
+    // managed by hibernate which is better
+    return Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beerDTO))));
 
-    beerRepository
-            .findById(id)
-            .ifPresentOrElse(
-                    beer -> {
-                      beer.setBeerName(beerDTO.getBeerName());
-                      beer.setBeerStyle(beerDTO.getBeerStyle());
-                      beer.setPrice(beerDTO.getPrice());
-                      beer.setUpc(beerDTO.getUpc());
-
-                      beerRepository.save(beer);
-                      updatedBeer.set(Optional.of(beerMapper.beerToBeerDto(beer)));
-                    },
-                    () -> updatedBeer.set(Optional.empty()));
-
-    return updatedBeer.get();
+    // has manual transaction so it is bypassed by hibernate and not managed by hibernate which is worse
+//    AtomicReference<Optional<BeerDTO>> updatedBeer = new AtomicReference<>();
+//
+//    beerRepository
+//            .findById(id)
+//            .ifPresentOrElse(
+//                    beer -> {
+//                      beer.setBeerName(beerDTO.getBeerName());
+//                      beer.setBeerStyle(beerDTO.getBeerStyle());
+//                      beer.setPrice(beerDTO.getPrice());
+//                      beer.setUpc(beerDTO.getUpc());
+//                      beer.setQuantityOnHand(beerDTO.getQuantityOnHand());
+//                      beer.setVersion(beerDTO.getVersion());
+//
+//
+//                      beerRepository.save(beer);
+//                      updatedBeer.set(Optional.of(beerMapper.beerToBeerDto(beer)));
+//                    },
+//                    () -> updatedBeer.set(Optional.empty()));
+//
+//    return updatedBeer.get();
   }
 
   @Override
